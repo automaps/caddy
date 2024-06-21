@@ -2,7 +2,7 @@ import ezdxf
 from ezdxf.addons import Importer
 from ezdxf.math import Matrix44
 
-from conversion import to_shapely
+from samples.experiments.conversion import to_shapely
 
 
 def per_layer_export(source_doc):

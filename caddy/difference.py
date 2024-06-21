@@ -1,6 +1,5 @@
 import logging
 from pathlib import Path
-from pprint import pprint
 from typing import Dict, Iterable, List, Optional, Union
 
 from ezdxf.lldxf.extendedtags import ExtendedTags
@@ -8,7 +7,7 @@ from ezdxf.lldxf.tagger import tag_compiler
 from ezdxf.lldxf.tags import Tags
 from ezdxf.tools.rawloader import raw_structure_loader
 
-from helpers import OpCode, tag_two_way_difference, tags_difference
+from caddy.helpers import OpCode, tag_two_way_difference, tags_difference
 
 logger = logging.getLogger(__name__)
 
@@ -73,20 +72,3 @@ def entity_tags(entities: Iterable[Tags], handle: str) -> Optional[Tags]:
       return Tags(tag_compiler(iter(e)))
 
   return None
-
-
-if __name__ == "__main__":
-
-  for pair in (
-      (Path.home() / 'Downloads' / 'dxfs' / 'Frb1_2-M_Aug2022.dxf',
-       Path.home() / 'Downloads' / 'dxfs' / 'Frb1_2-M_Jan2024.dxf'),
-      (Path.home() / 'Downloads' / 'dxfs' / '132173_22_20240106-003031.dxf',
-       Path.home() / 'Downloads' / 'dxfs' / '132173_22_20240327-023017.dxf'),
-      (Path.home() / 'Downloads' / 'dxfs' / 'Frb1_K-M_Aug2022.dxf',
-       Path.home() / 'Downloads' / 'dxfs' / 'Frb1_K-M_Jan2024.dxf'),
-  ):
-    for d in raw_dxf_difference(*pair):
-      k, v = next(iter(d.items()))
-      if k == 'ENTITIES':
-        pprint(v)
-    break

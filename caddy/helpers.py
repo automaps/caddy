@@ -71,8 +71,8 @@ def tag_two_way_difference(a: Tags, b: Tags, operations: Iterable[Operation]) ->
 
     for op in operations:
         if op.opcode == OpCode.insert:
-            for t1 in b[op.j1 : op.j2]:
-                tag_level_res["insert"][f"{op.i1}:{op.i2}"] = t1
+            for t2 in b[op.j1 : op.j2]:
+                tag_level_res["insert"][f"{op.i1}:{op.i2}"] = t2
 
         elif op.opcode == OpCode.replace:
             from_ = {}
@@ -83,7 +83,7 @@ def tag_two_way_difference(a: Tags, b: Tags, operations: Iterable[Operation]) ->
             for index, t2 in enumerate(b[op.j1 : op.j2], op.j1):
                 to_[index] = t2
 
-            tag_level_res["replace"][b.get_handle()] = (from_, to_)
+            tag_level_res["replace"][f"{op.i1}:{op.i2},{op.j1}:{op.j2}"] = (from_, to_)
 
         elif op.opcode == OpCode.delete:
             for index, t1 in enumerate(a[op.i1 : op.i2], op.i1):

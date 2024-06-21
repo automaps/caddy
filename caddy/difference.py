@@ -49,8 +49,11 @@ def section_two_way_difference(
         )
         if has_tag_level_difference:
             entity_level_result["modified"].append(
-                tag_two_way_difference(
-                    compiled_original_tags, new_entity_tags, tag_level_difference
+                (
+                    entity_handle,
+                    tag_two_way_difference(
+                        compiled_original_tags, new_entity_tags, tag_level_difference
+                    ),
                 )
             )
 

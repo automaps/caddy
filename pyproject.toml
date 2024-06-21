@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "Caddy"
+version = "0.0.1"
+description = ""
+authors = ["Christian Heider Lindbjerg <chen@mapspeople.com>"]
+readme = "README.md"
+packages = [{ include = "caddy" }]
+
+
+[tool.poetry.dependencies]
+python = "^3.10"
+warg = ">=1.4.1"
+draugr = ">=1.2.0"
+numpy = ">=1.26.2"
+jord = { version = ">=0.5.2" }
+
+
+[tool.poetry.group.dev.dependencies]
+flake8 = ">=6.0.0"
+black = ">=23.1.0"
+pre-commit = ">=2.0.0"
+furo = ">=2022.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

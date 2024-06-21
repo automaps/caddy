@@ -1,0 +1,92 @@
+# Include template
+include:
+  - project: "MapsIndoors/Utils/gitlab-ci-templates"
+    ref: master
+    file: ".gitlab-ci-python3.yml"
+
+# Stages
+stages:
+  - Code Analysis
+  - Build
+  - Test
+  - Deploy
+
+# Code Analysis
+pylint-app:
+  extends: .pylint
+  stage: Code Analysis
+  allow_failure: false
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+black:
+  stage: Code Analysis
+  extends: .black
+  variables:
+    SRC_PATH: caddy
+  allow_failure: false
+  rules:
+    - if: $CI_MERGE_REQUEST_IID # On merge_requests
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH # Or main
+
+flake8:
+  stage: Code Analysis
+  extends: .flake8
+  variables:
+    EXCLUDE_STRING: "submodules"
+  allow_failure: false
+  rules:
+    - if: $CI_MERGE_REQUEST_IID # On merge_requests
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH # Or main
+
+poetry-check:
+  stage: Code Analysis
+  extends: .poetry-check
+
+# Build
+build-docker-image:
+  stage: Build
+  extends: .docker-build
+  rules:
+    - if: $CI_MERGE_REQUEST_IID # On merge_requests
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  needs: []
+
+### Test ###
+unit-tests:
+  stage: Test
+  extends: .pytest-parallel
+  variables:
+    TEST_FILES_OR_DIRS: tests
+  rules:
+    - if: $CI_MERGE_REQUEST_IID # On merge_requests
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# Deploy
+
+#publish-pypi:
+#  stage: Deploy
+#  rules:
+#    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH # on main
+#  needs: ["unit-tests"]
+#  image: python:latest
+#  script:
+#    - pip install poetry
+#    - poetry build
+#    - echo $CI_PROJECT_PATH
+#    - poetry config repositories.gitlab "https://git.rtx.mapspeople.com/api/v4/projects/$CI_PROJECT_ID/packages/pypi"
+#    - poetry config http-basic.gitlab gitlab-ci-token "$CI_JOB_TOKEN"
+#    - poetry publish --repository gitlab
+
+pages:
+  stage: Deploy
+  extends: .pages
+  before_script:
+    - pip install furo
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH # On main
+
+publish-package:
+  stage: Deploy
+  extends: .publish-python-package-poetry

@@ -1,6 +1,9 @@
 import ezdxf
 from ezdxf.addons import geo
+from ezdxf.addons.geo import GeoProxy
 from shapely.geometry import shape
+
+load_gpx_track = None
 
 
 def retransform_pyproj():

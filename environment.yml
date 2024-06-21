@@ -1,0 +1,11 @@
+name: caddy
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.10
+  - pip>=22.3.1
+  - pip: # TODO: POETRY EXPORT FILES DOES NOT WORK FOR NOW
+      - poetry #-r requirements.txt
+      - -r requirements.txt

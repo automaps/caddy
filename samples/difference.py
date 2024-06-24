@@ -2,12 +2,10 @@ from pathlib import Path
 
 import ezdxf
 import shapely
-
 from caddy.difference import raw_dxf_difference
 from caddy.to_gpkg import to_shapely
 
 if __name__ == "__main__":
-
     for pair in (
         (
             Path.home() / "Downloads" / "dxfs" / "Frb1_2-M_Aug2022.dxf",
@@ -22,12 +20,10 @@ if __name__ == "__main__":
             Path.home() / "Downloads" / "dxfs" / "132173_22_20240327-023017.dxf",
         ),
     ):
-
         source_dxf = ezdxf.readfile(pair[0])
         target_dxf = ezdxf.readfile(pair[1])
 
         for d in raw_dxf_difference(*pair):
-
             k, v = next(iter(d.items()))
             if k == "ENTITIES":
                 created, modified, deleted = v["created"], v["modified"], v["deleted"]

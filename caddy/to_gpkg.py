@@ -1,63 +1,16 @@
-import logging
 from collections import OrderedDict, defaultdict
 from pathlib import Path
-from typing import Iterable
 
 import ezdxf
-import shapely
-from ezdxf.addons import geo
-from ezdxf.entities import DXFEntity, DXFGraphic, Insert, MText, Text
 from ezdxf.math import Matrix44
-from ezdxf.query import EntityQuery
 from geopandas import GeoDataFrame
 
-TRANSFORM = False
+__all__ = ["export_to_gpkg"]
 
-logger = logging.getLogger(__name__)
-
-
-def to_shapely(entity: DXFEntity, m=None, step_size=0.1):
-    if isinstance(entity, Insert):
-        entities: EntityQuery = entity.explode()
-        # entities.groupby()
-        for ent in entities:
-            yield from to_shapely(ent, m)
-
-        return
-
-    elif isinstance(entity, (MText, Text)):
-        vec3 = entity.dxf.insert
-        yield shapely.Point(
-            vec3.x,
-            vec3.y,
-            # , vec3.z
-        ), entity
-
-    elif isinstance(entity, (DXFGraphic, Iterable)):
-        try:
-            geo_proxy = geo.proxy(entity, distance=step_size, force_line_string=False)
-
-            geo_proxy.places = 10  # Infinite precision
-
-            if TRANSFORM:
-                # Transform DXF WCS coordinates into CRS coordinates:
-                geo_proxy.wcs_to_crs(m)
-                # Transform 2D map projection EPSG:3395 into globe (polar)
-                # representation EPSG:4326
-                geo_proxy.map_to_globe()
-
-            geom = shapely.geometry.shape(geo_proxy)
-            yield geom, entity
-
-        except Exception as e:
-            logger.warning(entity)
-            ...
-    else:
-        logger.warning(entity)
-        ...
+from .conversion import to_shapely
 
 
-def export_to_gpkg(dxf_path: Path):
+def export_to_gpkg(dxf_path: Path, out_path: Path) -> None:
     source_doc = ezdxf.readfile(str(dxf_path))
 
     msp = source_doc.modelspace()
@@ -96,4 +49,4 @@ def export_to_gpkg(dxf_path: Path):
     for l, g in dict(geoms).items():
         gdf = GeoDataFrame({"geometry": g})
         # gdf.crs = 'EPSG:4326'
-        gdf.to_file("out.gpkg", driver=driver, layer=l)
+        gdf.to_file(str(out_path), driver=driver, layer=l)

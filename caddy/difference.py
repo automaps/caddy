@@ -1,15 +1,28 @@
 import logging
+from collections import defaultdict
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Union
 
+import ezdxf
+import shapely
+from jord.shapely_utilities import dilate
+
+from .helpers import OpCode, tag_two_way_difference, tags_difference
 from ezdxf.lldxf.extendedtags import ExtendedTags
 from ezdxf.lldxf.tagger import tag_compiler
 from ezdxf.lldxf.tags import Tags
 from ezdxf.tools.rawloader import raw_structure_loader
 
-from caddy.helpers import OpCode, tag_two_way_difference, tags_difference
+from .conversion import to_shapely
 
 logger = logging.getLogger(__name__)
+
+__all__ = [
+    "get_handle",
+    "section_two_way_difference",
+    "entity_tags",
+    "get_entity_difference",
+]
 
 
 def get_handle(tags: Tags) -> str:
@@ -88,3 +101,78 @@ def entity_tags(entities: Iterable[Tags], handle: str) -> Optional[Tags]:
             return Tags(tag_compiler(iter(e)))
 
     return None
+
+
+def strip_z_coord(l):
+    return shapely.ops.transform(lambda x, y, z=None: (x, y), l)
+
+
+def get_entity_difference(*pair) -> Dict:
+    out = defaultdict(dict)
+    source_dxf = ezdxf.readfile(pair[0])
+    target_dxf = ezdxf.readfile(pair[1])
+
+    buffer_size = 10
+
+    for d in raw_dxf_difference(*pair):
+        k, v = next(iter(d.items()))
+        if k == "ENTITIES":
+            created, modified, deleted = v["created"], v["modified"], v["deleted"]
+
+            for handle in created:
+                target_entity = target_dxf.entitydb.get(handle)
+                for g in to_shapely(target_entity):
+                    out[handle]["added entity"] = g
+
+            for handle in deleted:
+                source_entity = source_dxf.entitydb.get(handle)
+                for g in to_shapely(source_entity):
+                    out[handle]["deleted entity"] = g
+
+            for m in modified:
+                handle, operations = m
+                delete, insert, replace = (
+                    operations["delete"],
+                    operations["insert"],
+                    operations["replace"],
+                )
+
+                source_entity = source_dxf.entitydb.get(handle)
+                target_entity = target_dxf.entitydb.get(handle)
+
+                for src_geom in to_shapely(source_entity):
+                    tgt_geom = next(iter(to_shapely(target_entity)))
+
+                    src_geom: shapely.geometry.base.BaseGeometry = strip_z_coord(
+                        src_geom[0]
+                    )
+                    tgt_geom: shapely.geometry.base.BaseGeometry = strip_z_coord(
+                        tgt_geom[0]
+                    )
+
+                    if True:
+                        if isinstance(src_geom, shapely.Point):
+                            out[handle]["src point"] = src_geom
+                            out[handle]["tgt point"] = tgt_geom
+                        else:
+                            added = src_geom.difference(tgt_geom)
+                            remaining = src_geom.intersection(tgt_geom)
+                            removed = tgt_geom.difference(src_geom)
+
+                            if not added.is_empty:
+                                out[handle]["added geometry"] = added
+                            if not added.is_empty:
+                                out[handle]["remaining geometry"] = remaining
+                            if not added.is_empty:
+                                out[handle]["removed geometry"] = removed
+
+                    out[handle]["diffbuffer"] = dilate(
+                        shapely.unary_union((src_geom, tgt_geom)), buffer_size
+                    )  # Buffer
+
+                if True:
+                    out[handle]["added tags"] = insert
+                    out[handle]["deleted tags"] = delete
+                    out[handle]["replaced tags"] = replace
+
+    return dict(**out)

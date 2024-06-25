@@ -3,7 +3,7 @@ from pathlib import Path
 import ezdxf
 import shapely
 from caddy.difference import raw_dxf_difference
-from caddy.to_gpkg import to_shapely
+from caddy.exporting import to_shapely
 
 if __name__ == "__main__":
     for pair in (

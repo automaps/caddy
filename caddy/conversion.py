@@ -5,7 +5,16 @@ from typing import Iterable, Optional, Tuple, Union
 
 import shapely
 from ezdxf.addons import geo
-from ezdxf.entities import DXFEntity, DXFGraphic, Dimension, Insert, MText, Text
+from ezdxf.entities import (
+    DXFEntity,
+    DXFGraphic,
+    Dimension,
+    Insert,
+    MText,
+    Text,
+    Circle,
+    Arc,
+)
 from ezdxf.layouts import BlockLayout
 from ezdxf.math import Matrix44, basic_transformation
 
@@ -72,7 +81,12 @@ def to_shapely(
         ), entity
 
     elif isinstance(entity, Dimension):
-        logger.info(f"Skipping dimension conversion {entity}")
+        ...
+        # logger.info(f"Skipping dimension conversion {entity}")
+
+    elif isinstance(entity, Arc):  # TODO: ALSO CIRCLE?
+        ...  # TODO: NOT SUPPORT ATM
+        # logger.info(f"Skipping circle conversion {entity}")
 
     elif isinstance(entity, (DXFGraphic, Iterable)):
         try:
@@ -94,7 +108,7 @@ def to_shapely(
             logger.warning(entity)
             ...
     else:
-        logger.warning(entity)
+        ##logger.warning(entity)
         ...
 
     # logger.warning("Done")

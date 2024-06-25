@@ -14,14 +14,18 @@ from ezdxf.entities import (
     Text,
     Circle,
     Arc,
+    Polyline,
 )
+from jord.shapely_utilities import clean_shape
+from ezdxf.path import make_path
+from ezdxf.entities.image import ImageBase
 from ezdxf.layouts import BlockLayout
 from ezdxf.math import Matrix44, basic_transformation
 
 TRANSFORM = False
 logger = logging.getLogger(__name__)
 
-__all__ = ["to_shapely", "BlockInsertion"]
+__all__ = ["to_shapely", "BlockInsertion", "FailCase"]
 
 
 @dataclass
@@ -30,12 +34,22 @@ class BlockInsertion:
     insertion: Insert
 
 
+@dataclass
+class FailCase:
+    entity: DXFEntity
+    case: str
+
+
 def to_shapely(
     entity: DXFEntity,
     m: Matrix44 = None,
     step_size: float = 0.1,
     precision: float = 10,
-) -> Optional[Tuple[shapely.geometry.base.BaseGeometry, Union[DXFEntity, BlockLayout]]]:
+) -> Optional[
+    Tuple[
+        shapely.geometry.base.BaseGeometry, Union[DXFEntity, BlockInsertion, FailCase]
+    ]
+]:
     if isinstance(entity, Insert):
         if False:
             multiplier = 10
@@ -81,36 +95,74 @@ def to_shapely(
         ), entity
 
     elif isinstance(entity, Dimension):
-        ...
-        # logger.info(f"Skipping dimension conversion {entity}")
+        for ent in entity.virtual_entities():
+            yield from to_shapely(ent, m)
 
-    elif isinstance(entity, Arc):  # TODO: ALSO CIRCLE?
-        ...  # TODO: NOT SUPPORT ATM
-        # logger.info(f"Skipping circle conversion {entity}")
+    elif isinstance(entity, Polyline) and not (
+        entity.is_3d_polyline or entity.is_2d_polyline
+    ):
+        poly = shapely.Polygon((p.x, p.y) for p in entity.points())
 
-    elif isinstance(entity, (DXFGraphic, Iterable)):
-        try:
-            geo_proxy = geo.proxy(entity, distance=step_size, force_line_string=False)
+        yield clean_shape(poly), entity
 
-            geo_proxy.places = precision
+    elif isinstance(entity, ImageBase):
+        yield shapely.LineString((v.x, v.y) for v in entity.boundary_path), entity
 
-            if TRANSFORM:
-                # Transform DXF WCS coordinates into CRS coordinates:
-                geo_proxy.wcs_to_crs(m)
-                # Transform 2D map projection EPSG:3395 into globe (polar)
-                # representation EPSG:4326
-                geo_proxy.map_to_globe()
-
-            geom = shapely.geometry.shape(geo_proxy)
-            yield geom, entity
-
-        except Exception as e:
-            logger.warning(entity)
-            ...
     else:
-        ##logger.warning(entity)
-        ...
+        if isinstance(entity, (DXFGraphic, Iterable)):
+            try:
+                geo_proxy = geo.proxy(
+                    entity, distance=step_size, force_line_string=False
+                )
 
-    # logger.warning("Done")
+                geo_proxy.places = precision
+
+                if TRANSFORM:
+                    # Transform DXF WCS coordinates into CRS coordinates:
+                    geo_proxy.wcs_to_crs(m)
+                    # Transform 2D map projection EPSG:3395 into globe (polar)
+                    # representation EPSG:4326
+                    geo_proxy.map_to_globe()
+
+                geom = shapely.geometry.shape(geo_proxy)
+                yield geom, entity
+
+                return
+
+            except Exception as e:
+                logger.error(e)
+
+        if True:  # FAIL CASES
+            if isinstance(entity, (Circle)):
+                if entity.get_layout() is not None:
+                    yield from to_shapely(entity.to_spline(False))
+
+                    return
+
+            if hasattr(entity, "vertices"):
+                case = "vertices"
+
+                if hasattr(entity.dxf, "radius") and entity.dxf.radius > 0:
+                    sagitta = step_size
+                    if entity.dxf.radius < 0.1:
+                        sagitta = 0.000001
+                    geom = shapely.LineString(
+                        (p.x, p.y) for p in entity.flattening(sagitta)
+                    )
+                    case = "radius"
+
+                elif hasattr(entity, "flattening"):
+                    geom = shapely.LineString(
+                        (p.x, p.y) for p in entity.flattening(step_size)
+                    )
+                    case = "flattening"
+                else:
+                    geom = shapely.LineString((p.x, p.y) for p in entity.vertices())
+
+                yield clean_shape(geom), FailCase(entity, case=case)
+
+                return
+
+        logger.error(f"Skipping conversion of {entity=}")
 
     return

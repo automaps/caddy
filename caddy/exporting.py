@@ -11,7 +11,7 @@ __all__ = ["export_to"]
 from jord.shapely_utilities.base import clean_shape
 from jord.shapely_utilities.polygons import ensure_cw_poly, is_polygonal
 from ezdxf.entities import DXFEntity, MText, Text, Insert
-from .conversion import to_shapely, BlockInsertion
+from .conversion import to_shapely, BlockInsertion, FailCase
 from typing import Optional
 
 logger = logging.getLogger(__name__)
@@ -55,6 +55,10 @@ def export_to(
                 elif isinstance(e, BlockInsertion):
                     # logger.warning(f"Found block layout {e}")
                     geoms[f"BLOCK_INSERTS_OF_{e.block.name}"].append((g, e.insertion))
+                elif isinstance(e, FailCase):
+                    # logger.warning(f"Found fail case {e}")
+                    geoms[f"FAIL_CASE_{e.entity.dxf.layer}"].append((g, e.entity))
+
                 else:
                     logger.error(f"Unexpected entity type {type(e)}")
             else:
@@ -72,8 +76,9 @@ def export_to(
                                     cleaned = ensure_cw_poly(cleaned)
                             geoms[f"BLOCK_{block.name}"].append((cleaned, e))
                         elif isinstance(e, BlockInsertion):
-                            logger.warning(f"Found block layout {e}")
+                            # logger.warning(f"Found block layout {e}")
                             geoms[f"BLOCK_{block.name}"].append((g, e.insertion))
+
                         else:
                             logger.error(f"Unexpected entity type {type(e)}")
                     else:

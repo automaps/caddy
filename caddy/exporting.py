@@ -3,8 +3,10 @@ from collections import OrderedDict, defaultdict
 from pathlib import Path
 
 import ezdxf
+import shapely.geometry.base
 from ezdxf.math import Matrix44
 from geopandas import GeoDataFrame
+from dataclasses import dataclass
 
 __all__ = ["export_to"]
 
@@ -12,7 +14,7 @@ from jord.shapely_utilities.base import clean_shape
 from jord.shapely_utilities.polygons import ensure_cw_poly, is_polygonal
 from ezdxf.entities import DXFEntity, MText, Text, Insert
 from .conversion import to_shapely, BlockInsertion, FailCase
-from typing import Optional
+from typing import Optional, Dict, Tuple, Collection, List
 
 logger = logging.getLogger(__name__)
 
@@ -151,3 +153,58 @@ def export_to(
             )
 
     logger.warning(f"Wrote {out_path}")
+
+
+@dataclass
+class BlockPointInsert:
+    point: shapely.Point
+    rotation: float
+    x_scale: float
+    y_scale: float
+    z_scale: float
+
+
+def get_block_geoms(
+    dxf_path: Path,
+) -> Dict[
+    str,
+    Tuple[
+        Collection[shapely.geometry.base.BaseGeometry],
+        List[Tuple[shapely.Point, float, float, float, float]],
+    ],
+]:
+    source_doc = ezdxf.readfile(str(dxf_path))
+
+    block_geoms = defaultdict(list)
+
+    for block in source_doc.blocks:
+        for entity in block.entity_space:
+            for g, e in to_shapely(entity):
+                if g:
+                    if isinstance(e, DXFEntity):
+                        block_geoms[block.name].append(clean_shape(g))
+                else:
+                    logger.error(f"{entity} has no geometry ")
+
+    msp = source_doc.modelspace()
+
+    block_inserts = defaultdict(list)
+
+    for entity in msp.query("*"):
+        for g, e in to_shapely(entity):
+            if isinstance(e, BlockInsertion):
+                block_inserts[e.block.name].append((g, e.insertion))
+
+    block_out = {}
+
+    for name, t in block_inserts.items():
+        block_out[name] = {"geometries": block_geoms[name], "inserts": []}
+
+        for g, e in t:
+            block_out[name]["inserts"].append(
+                BlockPointInsert(
+                    g, e.dxf.rotation, e.dxf.xscale, e.dxf.xscale, e.dxf.xscale
+                )
+            )
+
+    return block_out

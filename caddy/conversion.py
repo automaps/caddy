@@ -76,9 +76,7 @@ def to_shapely(
             vec3 = entity.dxf.insert
 
             x, y, z = vec3.x, vec3.y, vec3.z
-            yield shapely.Point(x, y), BlockInsertion(
-                entity.block(), entity
-            )  # deepcopy(entity))
+            yield shapely.Point(x, y), BlockInsertion(entity.block(), entity)
 
         entity_query = (
             entity.virtual_entities()

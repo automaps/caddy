@@ -1,26 +1,23 @@
 import logging
-from copy import copy, deepcopy
 from dataclasses import dataclass
 from typing import Iterable, Optional, Tuple, Union
 
 import shapely
 from ezdxf.addons import geo
 from ezdxf.entities import (
+    Circle,
     DXFEntity,
     DXFGraphic,
     Dimension,
     Insert,
     MText,
-    Text,
-    Circle,
-    Arc,
     Polyline,
+    Text,
 )
-from jord.shapely_utilities import clean_shape
-from ezdxf.path import make_path
 from ezdxf.entities.image import ImageBase
 from ezdxf.layouts import BlockLayout
 from ezdxf.math import Matrix44, basic_transformation
+from jord.shapely_utilities import clean_shape
 
 TRANSFORM = False
 logger = logging.getLogger(__name__)
@@ -144,10 +141,14 @@ def to_shapely(
                     sagitta = step_size
                     if entity.dxf.radius < 0.1:
                         sagitta = 0.000001
-                    geom = shapely.LineString(
-                        (p.x, p.y) for p in entity.flattening(sagitta)
-                    )
-                    case = "radius"
+                    try:
+                        geom = shapely.LineString(
+                            (p.x, p.y) for p in entity.flattening(sagitta)
+                        )
+                        case = "radius"
+                    except Exception as e:
+                        logger.error(e)
+                        return
 
                 elif hasattr(entity, "flattening"):
                     geom = shapely.LineString(

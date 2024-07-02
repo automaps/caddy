@@ -184,6 +184,8 @@ def get_block_geoms(
                 if g:
                     if isinstance(e, DXFEntity):
                         block_geoms[block.name].append(clean_shape(g))
+                    elif isinstance(e, BlockInsertion):
+                        logger.error(f"Nested insert of {e.block}")
                 else:
                     logger.error(f"{entity} has no geometry ")
 
@@ -207,8 +209,8 @@ def get_block_geoms(
                     g,
                     e.dxf.rotation,
                     e.dxf.xscale,
-                    e.dxf.xscale,
-                    e.dxf.xscale,
+                    e.dxf.yscale,
+                    e.dxf.zscale,
                     matrix44=e.matrix44(),
                 )
             )

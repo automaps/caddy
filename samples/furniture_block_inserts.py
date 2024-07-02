@@ -17,8 +17,8 @@ from caddy.exporting import BlockPointInsert, get_block_geoms
 
 def get_transformation(insertion_point: BlockPointInsert) -> List[float]:
     if insertion_point.matrix44:
-        a = insertion_point.matrix44.get_2d_transformation()  # row wise
-        return [a[0], a[3], a[1], a[4], a[6], a[7]]
+        m = insertion_point.matrix44.get_2d_transformation()  # row wise
+        return [m[0], m[3], m[1], m[4], m[6], m[7]]
 
     angle = radians(insertion_point.rotation)
     cos_angle = cos(angle)
@@ -44,10 +44,6 @@ def random_rgba(mix: QuadNumber = (1, 1, 1, 1)) -> QuadNumber:
 
 
 if __name__ == "__main__":
-    blocks = get_block_geoms(
-        Path.home() / "Downloads" / "dxfs" / "Frb1_2-M_Aug2022.dxf"
-    )
-    # blocks = get_block_geoms(Path.home() / "Downloads" / "dxfs" / "132173_22_20240327-023017.dxf")
 
     PLOT = False
 
@@ -55,34 +51,39 @@ if __name__ == "__main__":
 
     masks = defaultdict(list)
 
-    for block_name, block in blocks.items():
+    for f in Path(r"S:\Geodata\Indoor\FordMotors\5215_PDC\geodata\cad\00").rglob(
+        "*fur.dxf"
+    ):
 
-        geoms = shapely.GeometryCollection(block["geometries"])
-        block_color = next(my)
+        for block_name, block in get_block_geoms(f).items():
 
-        for insertion_point in block["inserts"]:
-            transformed_geoms = affine_transform(
-                geoms, get_transformation(insertion_point)
-            )
+            geoms = shapely.GeometryCollection(block["geometries"])
+            block_color = next(my)
 
-            buffered = shapely.unary_union(dilate(transformed_geoms, distance=5))
+            for insertion_point in block["inserts"]:
+                transformed_geoms = affine_transform(
+                    geoms, get_transformation(insertion_point)
+                )
 
-            if PLOT:
-                plotting.plot_polygon(buffered, add_points=False, color=block_color)
+                buffered = shapely.unary_union(dilate(transformed_geoms, distance=5))
 
-            masks[block_name].append(buffered)
+                if PLOT:
+                    plotting.plot_polygon(buffered, add_points=False, color=block_color)
 
-    gdf = GeoDataFrame(
-        (
-            {"name": block_name, "geometry": instance}
-            for block_name, instances in masks.items()
-            for instance in instances
-        ),
-        geometry="geometry",
-    )
+                masks[block_name].append(buffered)
 
-    with open("blocks.geojson", "w") as f:
-        f.write(gdf.to_json())
+        gdf = GeoDataFrame(
+            (
+                {"name": block_name, "geometry": instance}
+                for block_name, instances in masks.items()
+                for instance in instances
+            ),
+            geometry="geometry",
+            crs=3857,
+        )
+
+        with open(f"{f.stem}-blocks.geojson", "w") as f:
+            f.write(gdf.to_json())
 
     if PLOT:
         pyplot.show()

@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import List
 
 import shapely
+from draugr.progress_bars import progress_bar
 from geopandas import GeoDataFrame
 from jord.shapely_utilities import dilate
 from matplotlib import pyplot
@@ -51,39 +52,49 @@ if __name__ == "__main__":
 
     masks = defaultdict(list)
 
-    for f in Path(r"S:\Geodata\Indoor\FordMotors\5215_PDC\geodata\cad\00").rglob(
-        "*fur.dxf"
-    ):
+    files = list(
+        Path(r"S:\Geodata\Indoor\FordMotors\5091\geodata\cad\dxf").rglob("*fur.dxf")
+    )
 
-        for block_name, block in get_block_geoms(f).items():
+    for f in progress_bar(files):
 
-            geoms = shapely.GeometryCollection(block["geometries"])
-            block_color = next(my)
+        if True:
+            for block_name, block in progress_bar(get_block_geoms(f).items()):
 
-            for insertion_point in block["inserts"]:
-                transformed_geoms = affine_transform(
-                    geoms, get_transformation(insertion_point)
+                geoms = shapely.GeometryCollection(block["geometries"])
+                block_color = next(my)
+
+                buffered = shapely.unary_union(
+                    dilate(shapely.unary_union(geoms), distance=1)
                 )
 
-                buffered = shapely.unary_union(dilate(transformed_geoms, distance=5))
+                for insertion_point in progress_bar(block["inserts"]):
 
-                if PLOT:
-                    plotting.plot_polygon(buffered, add_points=False, color=block_color)
+                    transformed_geoms = affine_transform(
+                        buffered, get_transformation(insertion_point)
+                    )
 
-                masks[block_name].append(buffered)
+                    if PLOT:
+                        plotting.plot_polygon(
+                            transformed_geoms, add_points=False, color=block_color
+                        )
 
-        gdf = GeoDataFrame(
-            (
-                {"name": block_name, "geometry": instance}
-                for block_name, instances in masks.items()
-                for instance in instances
-            ),
-            geometry="geometry",
-            crs=3857,
-        )
+                    masks[block_name].append(transformed_geoms)
+
+            gdf = GeoDataFrame(
+                (
+                    {"name": block_name, "geometry": instance}
+                    for block_name, instances in masks.items()
+                    for instance in instances
+                ),
+                geometry="geometry",
+                crs=3857,
+            )
 
         with open(f"{f.stem}-blocks.geojson", "w") as f:
             f.write(gdf.to_json())
+
+        break
 
     if PLOT:
         pyplot.show()

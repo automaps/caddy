@@ -16,10 +16,13 @@ from ezdxf.entities import (
 )
 from ezdxf.entities.image import ImageBase
 from ezdxf.layouts import BlockLayout
-from ezdxf.math import Matrix44, basic_transformation
+from ezdxf.math import Matrix44
 from jord.shapely_utilities import clean_shape
 
 TRANSFORM = False
+TRY_FIX_CURVES = False
+SMALL_NUMBER = 0.0001
+
 logger = logging.getLogger(__name__)
 
 __all__ = ["to_shapely", "BlockInsertion", "FailCase"]
@@ -48,37 +51,12 @@ def to_shapely(
     ]
 ]:
     if isinstance(entity, Insert):
-        if False:
-            multiplier = 10
-            vec3 = entity.dxf.insert
+        vec3 = entity.dxf.insert
 
-            x, y, z = vec3.x, vec3.y, vec3.z
-            rotation = entity.dxf.rotation
-            xs, ys, zs = entity.dxf.xscale, entity.dxf.xscale, entity.dxf.xscale
+        x, y, z = vec3.x, vec3.y, vec3.z
+        yield shapely.Point(x, y), BlockInsertion(entity.block(), entity)
 
-            left_ = vec3 * basic_transformation(
-                (x - multiplier, y - multiplier, z - multiplier), z_rotation=rotation
-            )
-
-            to_ = vec3 * basic_transformation(
-                (xs * multiplier, ys * multiplier, zs * multiplier), z_rotation=rotation
-            )
-
-            yield shapely.LineString(
-                [(left_.x, left_.y), (x, y), (to_.x, to_.y)]
-                # , vec3.z
-            ), entity.block()
-            # TODO: Box of scale WITH THE BEARING from rotation
-        else:
-            vec3 = entity.dxf.insert
-
-            x, y, z = vec3.x, vec3.y, vec3.z
-            yield shapely.Point(x, y), BlockInsertion(entity.block(), entity)
-
-        entity_query = (
-            entity.virtual_entities()
-        )  # entity.explode() # WARNING, PERMUTEs THE insert entity
-        for ent in entity_query:
+        for ent in entity.virtual_entities():
             yield from to_shapely(ent, m)
 
     elif isinstance(entity, (MText, Text)):
@@ -125,9 +103,10 @@ def to_shapely(
                 return
 
             except Exception as e:
-                logger.error(e)
+                if False:
+                    logger.error(e)
 
-        if True:  # FAIL CASES
+        if False:  # FAIL CASES
             if isinstance(entity, (Circle)):
                 if entity.get_layout() is not None:
                     yield from to_shapely(entity.to_spline(False))
@@ -138,9 +117,13 @@ def to_shapely(
                 case = "vertices"
 
                 if hasattr(entity.dxf, "radius") and entity.dxf.radius > 0:
+                    if not TRY_FIX_CURVES:
+                        logger.warning(f"skipping {entity}")
+                        return
+
                     sagitta = step_size
                     if entity.dxf.radius < 0.1:
-                        sagitta = 0.000001
+                        sagitta = SMALL_NUMBER
                     try:
                         geom = shapely.LineString(
                             (p.x, p.y) for p in entity.flattening(sagitta)
@@ -162,6 +145,7 @@ def to_shapely(
 
                 return
 
-        logger.error(f"Skipping conversion of {entity=}")
+        if False:
+            logger.error(f"Skipping conversion of {entity=}")
 
     return

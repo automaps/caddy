@@ -185,7 +185,7 @@ def get_block_geoms(
                     if isinstance(e, DXFEntity):
                         block_geoms[block.name].append(clean_shape(g))
                     elif isinstance(e, BlockInsertion):
-                        logger.error(f"Nested insert of {e.block}")
+                        logger.info(f"Nested insert of {e.block}")
                 else:
                     logger.error(f"{entity} has no geometry ")
 

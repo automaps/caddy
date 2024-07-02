@@ -1,14 +1,14 @@
 import logging
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
+from dataclasses import dataclass
 from pathlib import Path
 
 import ezdxf
 import shapely.geometry.base
 from ezdxf.math import Matrix44
 from geopandas import GeoDataFrame
-from dataclasses import dataclass
 
-__all__ = ["export_to"]
+__all__ = ["export_to", "BlockPointInsert", "get_block_geoms"]
 
 from jord.shapely_utilities.base import clean_shape
 from jord.shapely_utilities.polygons import ensure_cw_poly, is_polygonal
@@ -162,6 +162,7 @@ class BlockPointInsert:
     x_scale: float
     y_scale: float
     z_scale: float
+    matrix44: Matrix44
 
 
 def get_block_geoms(
@@ -203,7 +204,12 @@ def get_block_geoms(
         for g, e in t:
             block_out[name]["inserts"].append(
                 BlockPointInsert(
-                    g, e.dxf.rotation, e.dxf.xscale, e.dxf.xscale, e.dxf.xscale
+                    g,
+                    e.dxf.rotation,
+                    e.dxf.xscale,
+                    e.dxf.xscale,
+                    e.dxf.xscale,
+                    matrix44=e.matrix44(),
                 )
             )
 

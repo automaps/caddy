@@ -58,8 +58,7 @@ def plot_geom(geom, color) -> None:
 
 if __name__ == "__main__":
 
-    def auh():
-        PLOT = True
+    def auh(plot: bool = False) -> None:
 
         color_generator = iter(random_rgba())
 
@@ -83,7 +82,7 @@ if __name__ == "__main__":
                         buffered, get_transformation(insertion_point)
                     )
 
-                    if PLOT:
+                    if plot:
                         plot_geom(transformed_geoms, color=next(color_generator))
 
                     masks[block_name].append(transformed_geoms)
@@ -101,7 +100,7 @@ if __name__ == "__main__":
             with open(f"{f.stem}-blocks.geojson", "w") as f:
                 f.write(gdf.to_json())
 
-            if PLOT:
+            if plot:
                 pyplot.show()
 
     auh()

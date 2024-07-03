@@ -44,40 +44,47 @@ def random_rgba(mix: QuadNumber = (1, 1, 1, 1)) -> QuadNumber:
         yield (red, green, blue, alpha)
 
 
+def plot_geom(geom, color) -> None:
+    if isinstance(geom, shapely.GeometryCollection):
+        for g in geom.geoms:
+            plot_geom(g, color)
+    elif isinstance(geom, (shapely.LineString, shapely.MultiLineString)):
+        plotting.plot_line(geom, add_points=False, color=color)
+    elif isinstance(geom, (shapely.Point, shapely.MultiPoint)):
+        plotting.plot_points(geom, add_points=False, color=color)
+    else:
+        plotting.plot_polygon(geom, add_points=False, color=color)
+
+
 if __name__ == "__main__":
 
-    PLOT = False
+    def auh():
+        PLOT = True
 
-    my = iter(random_rgba())
+        color_generator = iter(random_rgba())
 
-    masks = defaultdict(list)
+        masks = defaultdict(list)
 
-    files = list(
-        Path(r"S:\Geodata\Indoor\FordMotors\5091\geodata\cad\dxf").rglob("*fur.dxf")
-    )
+        files = list(
+            Path(r"S:\Geodata\Indoor\FordMotors\5091\geodata\cad\dxf").rglob("*fur.dxf")
+        )
 
-    for f in progress_bar(files):
-
-        if True:
+        for f in progress_bar(files):
             for block_name, block in progress_bar(get_block_geoms(f).items()):
 
                 geoms = shapely.GeometryCollection(block["geometries"])
-                block_color = next(my)
 
                 buffered = shapely.unary_union(
                     dilate(shapely.unary_union(geoms), distance=1)
                 )
 
                 for insertion_point in progress_bar(block["inserts"]):
-
                     transformed_geoms = affine_transform(
                         buffered, get_transformation(insertion_point)
                     )
 
                     if PLOT:
-                        plotting.plot_polygon(
-                            transformed_geoms, add_points=False, color=block_color
-                        )
+                        plot_geom(transformed_geoms, color=next(color_generator))
 
                     masks[block_name].append(transformed_geoms)
 
@@ -91,10 +98,10 @@ if __name__ == "__main__":
                 crs=3857,
             )
 
-        with open(f"{f.stem}-blocks.geojson", "w") as f:
-            f.write(gdf.to_json())
+            with open(f"{f.stem}-blocks.geojson", "w") as f:
+                f.write(gdf.to_json())
 
-        break
+            if PLOT:
+                pyplot.show()
 
-    if PLOT:
-        pyplot.show()
+    auh()

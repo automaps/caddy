@@ -1,8 +1,7 @@
 from pathlib import Path
+from pprint import pprint
 
 from caddy.exporting import get_block_geoms
-
-from pprint import pprint
 
 if __name__ == "__main__":
     # get_block_geoms(Path.home() / "Downloads" / "dxfs" / "Frb1_2-M_Aug2022.dxf")

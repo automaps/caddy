@@ -5,15 +5,14 @@ from typing import Dict, Iterable, List, Optional, Union
 
 import ezdxf
 import shapely
-from jord.shapely_utilities import dilate
-
-from .helpers import OpCode, tag_two_way_difference, tags_difference
 from ezdxf.lldxf.extendedtags import ExtendedTags
 from ezdxf.lldxf.tagger import tag_compiler
 from ezdxf.lldxf.tags import Tags
 from ezdxf.tools.rawloader import raw_structure_loader
+from jord.shapely_utilities import dilate
 
 from .conversion import to_shapely
+from .helpers import OpCode, tag_two_way_difference, tags_difference
 
 logger = logging.getLogger(__name__)
 

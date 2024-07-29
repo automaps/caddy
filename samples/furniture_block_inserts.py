@@ -58,7 +58,6 @@ def plot_geom(geom, color) -> None:
 if __name__ == "__main__":
 
     def auh(plot: bool = False) -> None:
-
         color_generator = iter(random_rgba())
 
         masks = defaultdict(list)
@@ -69,7 +68,6 @@ if __name__ == "__main__":
 
         for f in progress_bar(files):
             for block_name, block in progress_bar(get_block_geoms(f).items()):
-
                 geoms = shapely.GeometryCollection(block["geometries"])
 
                 buffered = shapely.unary_union(

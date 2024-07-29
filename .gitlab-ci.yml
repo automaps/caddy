@@ -51,7 +51,7 @@ build-docker-image:
   rules:
     - if: $CI_MERGE_REQUEST_IID # On merge_requests
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-  needs: []
+  needs: [ ]
 
 ### Test ###
 unit-tests:

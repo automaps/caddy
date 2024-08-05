@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "Caddy"
+name = "caddy"
 version = "0.0.1"
 description = ""
 authors = ["Christian Heider Lindbjerg <chen@mapspeople.com>"]

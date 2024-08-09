@@ -2,6 +2,7 @@ from pathlib import Path
 
 import ezdxf
 import shapely
+
 from caddy.difference import raw_dxf_difference
 from caddy.exporting import to_shapely
 

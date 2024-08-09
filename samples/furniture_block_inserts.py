@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import List
 
 import shapely
-from caddy.exporting import BlockPointInsert, get_block_geoms
 from draugr.progress_bars import progress_bar
 from geopandas import GeoDataFrame
 from jord.shapely_utilities import dilate
@@ -13,6 +12,8 @@ from numpy import cos, radians, sin
 from shapely import plotting
 from shapely.affinity import affine_transform
 from warg import QuadNumber
+
+from caddy.exporting import BlockPointInsert, get_block_geoms
 
 
 def get_transformation(insertion_point: BlockPointInsert) -> List[float]:

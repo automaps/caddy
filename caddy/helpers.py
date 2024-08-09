@@ -11,7 +11,6 @@ from ezdxf.lldxf.types import DXFTag, DXFVertex
 
 __all__ = ["tags_difference", "tag_two_way_difference", "OpCode"]
 
-
 # https://docs.python.org/3/library/difflib.html
 
 

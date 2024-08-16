@@ -1,7 +1,7 @@
 import ezdxf
+import shapely
 from ezdxf.addons import geo
 from ezdxf.addons.geo import GeoProxy
-from shapely.geometry import shape
 
 load_gpx_track = None
 
@@ -36,7 +36,7 @@ def to_shapely():
     hatch_proxy = geo.proxy(hatch_entity)
 
     # Shapely supports the __geo_interface__
-    shapely_polygon = shape(hatch_proxy)
+    shapely_polygon = shapely.geometry.shape(hatch_proxy)
 
     if shapely_polygon.is_valid:
         ...
@@ -48,7 +48,7 @@ def to_shapely():
         # Multi-entities are divided into single entities:
         # e.g. MultiPolygon is verified as multiple single Polygon entities.
         if geo_proxy.geotype == "Polygon":
-            return shape(geo_proxy).is_valid
+            return shapely.geometry.shape(geo_proxy).is_valid
         return True
 
     # The gfilter() function let only pass compatible DXF entities

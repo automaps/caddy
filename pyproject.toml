@@ -11,7 +11,8 @@ packages = [{ include = "caddy" }]
 python = "^3.9"
 warg = ">=1.4.1"
 draugr = ">=1.2.0"
-numpy = "^1.24.0"
+numpy = ">=1.24.0"
+ezdxf = ">=1.1.1"
 jord = { version = ">=0.5.2" }
 
 

@@ -155,9 +155,7 @@ def export_to(
     logger.warning(f"Wrote {out_path}")
 
 
-def export_to_shapely_dict(
-    dxf_path: Path
-) -> List[Dict]:
+def export_to_shapely_dict(dxf_path: Path) -> List[Dict]:
 
     source_doc = ezdxf.readfile(str(dxf_path))
 
@@ -217,8 +215,6 @@ def export_to_shapely_dict(
                             logger.error(f"Unexpected entity type {type(e)}")
                     else:
                         logger.error(f"{entity} has no geometry ")
-
-
 
     extras = defaultdict(list)
     for l, ges in dict(geoms).items():

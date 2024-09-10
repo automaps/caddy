@@ -180,9 +180,6 @@ def export_to_shapely_dict(dxf_path: Path) -> List[Dict]:
             if g:
                 if isinstance(e, DXFEntity):
                     cleaned = clean_shape(g)
-                    if False:
-                        if is_polygonal(cleaned):
-                            cleaned = ensure_cw_poly(cleaned)
                     geoms[e.dxf.layer].append((cleaned, e))
                 elif isinstance(e, BlockInsertion):
                     # logger.warning(f"Found block layout {e}")
@@ -195,26 +192,6 @@ def export_to_shapely_dict(dxf_path: Path) -> List[Dict]:
                     logger.error(f"Unexpected entity type {type(e)}")
             else:
                 logger.error(f"{entity} has no geometry ")
-
-    if False:
-        for block in source_doc.blocks:
-            for entity in block.entity_space:
-                for g, e in to_shapely(entity, m):
-                    if g:
-                        if isinstance(e, DXFEntity):
-                            cleaned = clean_shape(g)
-                            if False:
-                                if is_polygonal(cleaned):
-                                    cleaned = ensure_cw_poly(cleaned)
-                            geoms[f"BLOCK_{block.name}"].append((cleaned, e))
-                        elif isinstance(e, BlockInsertion):
-                            # logger.warning(f"Found block layout {e}")
-                            geoms[f"BLOCK_{block.name}"].append((g, e.insertion))
-
-                        else:
-                            logger.error(f"Unexpected entity type {type(e)}")
-                    else:
-                        logger.error(f"{entity} has no geometry ")
 
     extras = defaultdict(list)
     for l, ges in dict(geoms).items():

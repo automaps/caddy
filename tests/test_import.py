@@ -6,7 +6,10 @@ ensure_in_sys_path(Path(__file__).parent.parent)
 
 
 def test_import_package():
-    if True:
-        import caddy
+    import caddy
+    import caddy.conversion
+    import caddy.difference
+    import caddy.exporting
+    import caddy.helpers
 
-        print(caddy.__version__)
+    print(caddy.__version__)

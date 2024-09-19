@@ -10,8 +10,7 @@ from geopandas import GeoDataFrame
 
 __all__ = ["export_to", "BlockPointInsert", "get_block_geoms"]
 
-from jord.shapely_utilities.base import clean_shape
-from jord.shapely_utilities.polygons import ensure_cw_poly, is_polygonal
+from jord.shapely_utilities import clean_shape, ensure_cw_poly, is_polygonal
 from ezdxf.entities import DXFEntity, MText, Text, Insert
 from .conversion import to_shapely, BlockInsertion, FailCase
 from typing import Optional, Dict, Tuple, Collection, List

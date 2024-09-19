@@ -8,11 +8,15 @@ packages = [{ include = "caddy" }]
 
 
 [tool.poetry.dependencies]
+pytest = "*"
 python = "^3.9"
 warg = ">=1.4.1"
 draugr = ">=1.2.0"
 numpy = "^1.24.0"
-jord = { version = ">=0.5.2" }
+jord = "0.7.8"
+shapely = ">=2.0.3"
+ezdxf = ">=1.2.0"
+geopandas = ">=1.0.1"
 
 
 [tool.poetry.group.dev.dependencies]

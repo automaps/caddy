@@ -21,6 +21,8 @@ __all__ = [
     "section_two_way_difference",
     "entity_tags",
     "get_entity_difference",
+    "strip_z_coord",
+    "raw_dxf_difference",
 ]
 
 

@@ -13,7 +13,10 @@ python = "^3.9"
 warg = ">=1.4.1"
 draugr = ">=1.2.0"
 numpy = "^1.24.0"
-jord = "0.7.8" # Hard pin this mf. Can't be trusted
+jord = "0.7.8"
+shapely = ">=2.0.3"
+ezdxf = ">=1.2.0"
+geopandas = ">=1.0.1"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -10,7 +10,7 @@ class DxfSection(StrEnum):
     # header = 'HEADER'
     # classes = 'CLASSES'
     # tables="TABLES"
-    # blocks="BLOCKS"
+    blocks = "BLOCKS"
     entities = "ENTITIES"
     # objects = "OBJECTS"
     # thumbnailimage = "THUMBNAILIMAGE"

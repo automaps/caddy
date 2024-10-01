@@ -6,7 +6,7 @@ from ezdxf.addons.geo import GeoProxy
 load_gpx_track = None
 
 
-def retransform_pyproj():
+def retransform_pyproj() -> None:
     from pyproj import Transformer
     from ezdxf.math import Vec3
 
@@ -23,7 +23,7 @@ def retransform_pyproj():
     geo_proxy.apply(lambda v: Vec3(ct.transform(v.x, v.y)))
 
 
-def to_shapely():
+def to_shapely() -> None:
     # Load DXF document including HATCH entities.
     doc = ezdxf.readfile("hatch.dxf")
     msp = doc.modelspace()

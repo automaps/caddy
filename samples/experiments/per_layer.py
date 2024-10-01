@@ -3,7 +3,7 @@ from ezdxf.addons import Importer
 from ezdxf.math import Matrix44
 from ezdxf.query import EntityQuery
 
-from samples.experiments.conversion import to_shapely
+from caddy.conversion import to_shapely
 
 
 def per_layer_export(source_doc):

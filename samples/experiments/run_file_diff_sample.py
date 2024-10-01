@@ -1,33 +1,20 @@
 import sys
 from pathlib import Path
-from typing import Iterable, Optional, Tuple
+from typing import Tuple
 
 import pandas
-from ezdxf.lldxf.tagger import tag_compiler
 from ezdxf.lldxf.tags import Tags
 from ezdxf.tools.difftags import diff_tags, print_diff
 from ezdxf.tools.rawloader import raw_structure_loader
 from warg import ensure_existence
 
 from caddy.difference import get_entity_difference
-
-
-def entity_tags(entities: Iterable[Tags], handle: str) -> Optional[Tags]:
-    def get_handle(tags: Tags):
-        try:
-            return tags.get_handle()
-        except ValueError:
-            return "0"
-
-    for e in entities:
-        if get_handle(e) == handle:
-            return Tags(tag_compiler(iter(e)))
-    return None
+from caddy.ezdxf_utilities import get_matched_tag_based_on_entity_handle
 
 
 def get_entities(doc1, doc2, handle: str) -> Tuple[Tags, Tags]:
-    a = entity_tags(doc1["ENTITIES"], handle)
-    b = entity_tags(doc2["ENTITIES"], handle)
+    a = get_matched_tag_based_on_entity_handle(doc1["ENTITIES"], handle)
+    b = get_matched_tag_based_on_entity_handle(doc2["ENTITIES"], handle)
     if a is None or b is None:
         raise ValueError(f"Entity #{handle} not present in both files")
     return a, b

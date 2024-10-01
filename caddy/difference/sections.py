@@ -1,18 +1,20 @@
 import logging
-from typing import List, Union, Dict
+from typing import Dict, List, Union
 
 from ezdxf.lldxf.extendedtags import ExtendedTags
 from ezdxf.lldxf.tagger import tag_compiler
 from ezdxf.lldxf.tags import Tags
 
 from caddy.ezdxf_utilities import (
+    OpCode,
     get_handle,
     get_matched_tag_based_on_entity_handle,
-    OpCode,
 )
-from .tags import tags_difference, tag_two_way_difference
+from .tags import tag_two_way_difference, tags_difference
 
 logger = logging.getLogger(__name__)
+
+__all__ = ["section_two_way_difference"]
 
 
 def section_two_way_difference(

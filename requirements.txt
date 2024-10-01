@@ -1,0 +1,13 @@
+black
+docutils
+ezdxf>=1.2.0
+flake8
+furo
+geopandas
+jord>=0.8.2
+numpy~=1.24.0
+pre-commit
+pytest
+requests
+sphinx
+warg

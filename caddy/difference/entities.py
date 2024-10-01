@@ -9,7 +9,7 @@ from jord.shapely_utilities import dilate
 from caddy.conversion import to_shapely
 from caddy.ezdxf_utilities import DxfSection
 from caddy.shapely_utilities import strip_z_coord
-from .file_level_diff import raw_dxf_difference
+from .documents import document_differences
 
 __all__ = ["get_entity_difference"]
 
@@ -22,7 +22,7 @@ def get_entity_difference(
     source_dxf = ezdxf.readfile(left_file_path)
     target_dxf = ezdxf.readfile(right_file_path)
 
-    for section, two_diff_dict in raw_dxf_difference(left_file_path, right_file_path):
+    for section, two_diff_dict in document_differences(left_file_path, right_file_path):
         if section == DxfSection.entities:
             created_entities, modified_entities, deleted_entities = (
                 two_diff_dict["created"],

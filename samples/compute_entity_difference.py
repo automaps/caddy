@@ -3,7 +3,7 @@ from pathlib import Path
 import ezdxf
 import shapely
 
-from caddy.difference import raw_dxf_difference
+from caddy.difference import document_differences
 from caddy.exporting import to_shapely
 
 if __name__ == "__main__":
@@ -24,7 +24,7 @@ if __name__ == "__main__":
         source_dxf = ezdxf.readfile(pair[0])
         target_dxf = ezdxf.readfile(pair[1])
 
-        for d in raw_dxf_difference(*pair):
+        for d in document_differences(*pair):
             k, v = next(iter(d.items()))
             if k == "ENTITIES":
                 created, modified, deleted = v["created"], v["modified"], v["deleted"]

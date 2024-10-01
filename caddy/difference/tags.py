@@ -1,10 +1,10 @@
-from __future__ import annotations
-
 from difflib import SequenceMatcher
-from typing import Optional, Iterator, Iterable, Dict
+from typing import Dict, Iterable, Iterator, Optional
 
 from ezdxf.lldxf.tags import Tags
 from ezdxf.lldxf.types import DXFTag
+
+__all__ = ["tags_difference", "tag_two_way_difference"]
 
 from caddy.ezdxf_utilities import round_tags, OpCode, Operation, convert_opcodes
 
@@ -15,6 +15,8 @@ def tags_difference(
     if ndigits is not None:
         a = Tags(round_tags(a, ndigits))
         b = Tags(round_tags(b, ndigits))
+
+    # SequenceMatcher https://docs.python.org/3/library/difflib.html
 
     return convert_opcodes(SequenceMatcher(a=a, b=b).get_opcodes())
 

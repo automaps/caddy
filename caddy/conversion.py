@@ -1,5 +1,4 @@
 import logging
-from dataclasses import dataclass
 from typing import Iterable, Optional, Tuple, Union
 
 import shapely
@@ -15,9 +14,10 @@ from ezdxf.entities import (
     Text,
 )
 from ezdxf.entities.image import ImageBase
-from ezdxf.layouts import BlockLayout
 from ezdxf.math import Matrix44
 from jord.shapely_utilities import clean_shape
+
+from caddy.model import BlockInsertion, FailCase
 
 TRANSFORM = False
 TRY_FIX_CURVES = False
@@ -25,19 +25,7 @@ SMALL_NUMBER = 0.0001
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["to_shapely", "BlockInsertion", "FailCase"]
-
-
-@dataclass
-class BlockInsertion:
-    block: BlockLayout
-    insertion: Insert
-
-
-@dataclass
-class FailCase:
-    entity: DXFEntity
-    case: str
+__all__ = ["to_shapely"]
 
 
 def to_shapely(

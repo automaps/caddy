@@ -311,3 +311,7 @@ cython_debug/
 .run/
 
 *.geojson
+
+*.gpkg
+
+*.dxf

@@ -7,12 +7,12 @@ __all__ = ["DxfSection"]
 
 
 class DxfSection(StrEnum):
-    # header = 'HEADER'
-    # classes = 'CLASSES'
-    # tables="TABLES"
+    header = "HEADER"
+    classes = "CLASSES"
+    tables = "TABLES"
     blocks = "BLOCKS"
     entities = "ENTITIES"
-    # objects = "OBJECTS"
-    # thumbnailimage = "THUMBNAILIMAGE"
-    # acdsdata = "ACDSDATA"
-    # end_of_file = "END OF FILE"
+    objects = "OBJECTS"
+    thumbnailimage = "THUMBNAILIMAGE"
+    acdsdata = "ACDSDATA"
+    end_of_file = "END OF FILE"

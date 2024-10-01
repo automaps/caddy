@@ -1,55 +1,12 @@
-#  Copyright (c) 2021-2022, Manfred Moitzi
-#  License: MIT License
 from __future__ import annotations
 
-import enum
 from difflib import SequenceMatcher
-from typing import Dict, Iterable, Iterator, NamedTuple, Optional
+from typing import Optional, Iterator, Iterable, Dict
 
 from ezdxf.lldxf.tags import Tags
-from ezdxf.lldxf.types import DXFTag, DXFVertex
+from ezdxf.lldxf.types import DXFTag
 
-__all__ = ["tags_difference", "tag_two_way_difference", "OpCode"]
-
-# https://docs.python.org/3/library/difflib.html
-
-
-class OpCode(enum.Enum):
-    replace = enum.auto()
-    delete = enum.auto()
-    insert = enum.auto()
-    equal = enum.auto()
-
-
-class Operation(NamedTuple):
-    opcode: OpCode
-    i1: int
-    i2: int
-    j1: int
-    j2: int
-
-
-CONVERT = {
-    "replace": OpCode.replace,
-    "delete": OpCode.delete,
-    "insert": OpCode.insert,
-    "equal": OpCode.equal,
-}
-
-
-def convert_opcodes(opcodes) -> Iterator[Operation]:
-    for tag, i1, i2, j1, j2 in opcodes:
-        yield Operation(CONVERT[tag], i1, i2, j1, j2)
-
-
-def round_tags(tags: Tags, ndigits: int) -> Iterator[DXFTag]:
-    for tag in tags:
-        if isinstance(tag, DXFVertex):
-            yield DXFVertex(tag.code, (round(d, ndigits) for d in tag.value))
-        elif isinstance(tag.value, float):
-            yield DXFTag(tag.code, round(tag.value, ndigits))  # type: ignore
-        else:
-            yield tag
+from caddy.ezdxf_utilities import round_tags, OpCode, Operation, convert_opcodes
 
 
 def tags_difference(

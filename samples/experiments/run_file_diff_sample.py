@@ -5,8 +5,9 @@ from typing import Iterable, Optional, Tuple
 import pandas
 from ezdxf.lldxf.tagger import tag_compiler
 from ezdxf.lldxf.tags import Tags
-from ezdxf.tools.difftags import print_diff, diff_tags
+from ezdxf.tools.difftags import diff_tags, print_diff
 from ezdxf.tools.rawloader import raw_structure_loader
+from warg import ensure_existence
 
 from caddy.difference import get_entity_difference
 
@@ -44,14 +45,12 @@ def main(filename1: str, filename2: str, handle: str):
 
 
 def difference():
+    dxf_base_dir = Path(r"C:\Users\chen\Downloads\dxfs")
+
     left, right = (
-        Path("C:/JPMC/DXF_Blocks") / "Frb1_2-M_Aug2022.dxf",
-        Path("C:/JPMC/DXF_Blocks") / "Frb1_2-M_Jan2024.dxf",
+        dxf_base_dir / "Frb1_K-M_Aug2022.dxf",
+        dxf_base_dir / "Frb1_K-M_Jan2024.dxf",
     )
-    data_output_path = (
-        Path(__file__).parent.parent.parent.parent.parent.parent / "JPMC" / "DXF_Blocks"
-    )
-    file_name = "bla"
 
     return_dict = get_entity_difference(left, right)
 
@@ -60,12 +59,11 @@ def difference():
     df = df.reset_index()
     df = df.rename(columns={"diffbuffer": "wkt", "index": "entity_handle"})
 
+    data_output_path = ensure_existence(dxf_base_dir / "out")
     df.to_csv(
-        data_output_path / f"{file_name}_difference_caddy.csv",
+        data_output_path / f"difference_caddy.csv",
         index=False,
     )
-
-    test = "test"
 
 
 if __name__ == "__main__":

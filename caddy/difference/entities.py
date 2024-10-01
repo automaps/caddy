@@ -1,4 +1,5 @@
 from collections import defaultdict
+from pathlib import Path
 from typing import Dict
 
 import ezdxf
@@ -7,21 +8,21 @@ from jord.shapely_utilities import dilate
 
 from caddy.conversion import to_shapely
 from caddy.ezdxf_utilities import DxfSection
+from caddy.shapely_utilities import strip_z_coord
 from .file_level_diff import raw_dxf_difference
 
 __all__ = ["get_entity_difference"]
 
-from ..shapely_utilities import strip_z_coord
 
-
-def get_entity_difference(left, right) -> Dict:
+def get_entity_difference(
+    left_file_path: Path, right_file_path: Path, diff_buffer_dilation_size: float = 10
+) -> Dict:
     out = defaultdict(dict)
-    source_dxf = ezdxf.readfile(left)
-    target_dxf = ezdxf.readfile(right)
 
-    buffer_size = 10
+    source_dxf = ezdxf.readfile(left_file_path)
+    target_dxf = ezdxf.readfile(right_file_path)
 
-    for section, two_diff_dict in raw_dxf_difference(left, right):
+    for section, two_diff_dict in raw_dxf_difference(left_file_path, right_file_path):
         if section == DxfSection.entities:
             created_entities, modified_entities, deleted_entities = (
                 two_diff_dict["created"],
@@ -48,22 +49,13 @@ def get_entity_difference(left, right) -> Dict:
                 )
 
                 old_geometries = to_shapely(source_dxf.entitydb.get(entity_handle))
-                assert len(list(old_geometries))
-                for src_geom in old_geometries:
-                    new_geometries = to_shapely(target_dxf.entitydb.get(entity_handle))
-                    assert len(new_geometries) == 1, f"{new_geometries=}"
+                new_geometries = to_shapely(target_dxf.entitydb.get(entity_handle))
 
-                    tgt_geom = next(iter(new_geometries))
-
-                    assert len(src_geom) == 1
-                    assert len(tgt_geom) == 1
-
-                    src_geom: shapely.geometry.base.BaseGeometry = strip_z_coord(
-                        src_geom[0]
-                    )
-                    tgt_geom: shapely.geometry.base.BaseGeometry = strip_z_coord(
-                        tgt_geom[0]
-                    )
+                for (src_geom, src_origin), (tgt_geom, tgt_origin) in zip(
+                    old_geometries, new_geometries, strict=True
+                ):
+                    src_geom = strip_z_coord(src_geom)
+                    tgt_geom = strip_z_coord(tgt_geom)
 
                     if True:
                         if isinstance(src_geom, shapely.Point):
@@ -82,7 +74,8 @@ def get_entity_difference(left, right) -> Dict:
                                 out[entity_handle]["removed geometry"] = removed
 
                     out[entity_handle]["diffbuffer"] = dilate(
-                        shapely.unary_union((src_geom, tgt_geom)), buffer_size
+                        shapely.unary_union((src_geom, tgt_geom)),
+                        distance=diff_buffer_dilation_size,
                     )  # Buffer
 
                 if True:

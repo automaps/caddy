@@ -10,12 +10,14 @@ __all__ = ["get_matched_tag_based_on_entity_handle", "round_tags"]
 
 
 def get_matched_tag_based_on_entity_handle(
-    entities: Iterable[Tags], old_handle: str
+    entities: Iterable[Tags], query_handle: str
 ) -> Optional[Tags]:
-    for e in entities:
-        new_handle = get_handle(e)
-        if new_handle == old_handle:
-            return Tags(tag_compiler(iter(e)))
+    for entity in entities:
+        result_handle = get_handle(entity)
+        if result_handle is not None:
+            if result_handle != "0":
+                if result_handle == query_handle:
+                    return Tags(tag_compiler(iter(entity)))
 
     return None
 

@@ -33,15 +33,20 @@ def get_entity_differences(
             )
 
             for entity_handle in created_entities:
-                created_geometries = to_shapely(target_dxf.entitydb.get(entity_handle))
-                assert len(created_geometries)
-                for geometry in created_geometries:
-                    out[entity_handle]["added geometry"] = geometry
+                for geometry, origin in to_shapely(
+                    target_dxf.entitydb.get(entity_handle)
+                ):
+                    out[entity_handle]["new geometry"] = geometry
+                    out[entity_handle]["diffbuffer"] = geometry
+                    out[entity_handle]["difftype"] = "new"
 
             for entity_handle in deleted_entities:
-                deleted_geometries = to_shapely(source_dxf.entitydb.get(entity_handle))
-                for geometry in deleted_geometries:
+                for geometry, origin in to_shapely(
+                    source_dxf.entitydb.get(entity_handle)
+                ):
                     out[entity_handle]["deleted geometry"] = geometry
+                    out[entity_handle]["diffbuffer"] = geometry
+                    out[entity_handle]["difftype"] = "deleted"
 
             for entity_handle, operations in modified_entities:
                 deleted_tags, inserted_tags, replaced_tags = (
@@ -79,6 +84,7 @@ def get_entity_differences(
                         shapely.unary_union((src_geom, tgt_geom)),
                         distance=diff_buffer_dilation_size,
                     )  # Buffer
+                    out[entity_handle]["difftype"] = "modified"
 
                 if True:
                     out[entity_handle]["added tags"] = inserted_tags

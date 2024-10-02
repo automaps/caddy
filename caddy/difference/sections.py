@@ -36,7 +36,7 @@ def section_two_way_difference(
 
         if new_entity_tags is None:
             logger.info(f"entity handle #{old_entity_handle} not found in new file")
-            entity_level_result["deleted"] = old_entity_handle
+            entity_level_result["deleted"].append(old_entity_handle)
         else:
             compiled_original_tags = Tags(tag_compiler(iter(original_tags)))
 
@@ -63,14 +63,15 @@ def section_two_way_difference(
 
     for new_tags in new_section:
         new_entity_handle = get_handle(new_tags)
-        new_entity_tags = get_matched_tag_based_on_entity_handle(
-            new_section, new_entity_handle
+
+        old_entity_tags = get_matched_tag_based_on_entity_handle(
+            original_section, new_entity_handle
         )
 
-        if new_entity_tags is None:
+        if old_entity_tags is None:
             logger.info(
                 f"entity handle #{new_entity_handle} not found in the original file"
             )
-            entity_level_result["created"] = new_entity_handle
+            entity_level_result["created"].append(new_entity_handle)
 
     return entity_level_result

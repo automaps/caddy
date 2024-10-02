@@ -11,8 +11,8 @@ def compute_entity_difference():
     dxf_base_dir = Path(r"C:\Users\chen\Downloads\dxfs")
 
     left, right = (
-        dxf_base_dir / "Frb1_K-M_Aug2022.dxf",
-        dxf_base_dir / "Frb1_K-M_Jan2024.dxf",
+        dxf_base_dir / "Frb1_2-M_Aug2022.dxf",
+        dxf_base_dir / "Frb1_2-M_Jan2024.dxf",
     )
 
     return_dict = get_entity_differences(left, right)
@@ -52,4 +52,4 @@ def compute_block_difference():
 
 
 if __name__ == "__main__":
-    compute_block_difference()
+    compute_entity_difference()

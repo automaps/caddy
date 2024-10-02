@@ -3,6 +3,7 @@ from typing import Iterable, Optional, Tuple, Union
 
 import shapely
 from ezdxf.addons import geo
+from ezdxf.disassemble import recursive_decompose
 from ezdxf.entities import (
     Circle,
     DXFEntity,
@@ -12,6 +13,7 @@ from ezdxf.entities import (
     MText,
     Polyline,
     Text,
+    Viewport,
 )
 from ezdxf.entities.image import ImageBase
 from ezdxf.math import Matrix44
@@ -68,6 +70,37 @@ def to_shapely(
 
     elif isinstance(entity, ImageBase):
         yield shapely.LineString((v.x, v.y) for v in entity.boundary_path), entity
+    elif isinstance(entity, Viewport):
+        if False:
+            for ent in recursive_decompose((entity,)):
+                yield from to_shapely(ent, m)
+
+        # entity.dxf.paperspace TODO: LOOK THIS UP
+        # entity.clipping_rect_corners()
+
+        if False:
+            vec3 = entity.dxf.center
+            width = entity.dxf.width
+            height = entity.dxf.height
+
+            yield shapely.Point(
+                vec3.x,
+                vec3.y,
+                # , vec3.z
+            ), entity
+        else:
+            (min_x, min_y, max_x, max_y) = entity.get_modelspace_limits()
+            # (-71.605931530016, -0.7866669825158965, 491.60594764232457, 297.7866552316861)
+
+            yield shapely.Polygon(
+                (
+                    (min_x, min_y),
+                    (max_x, min_y),
+                    (max_x, max_y),
+                    (min_x, max_y),
+                    (min_x, min_y),
+                )
+            ), entity
 
     else:
         if isinstance(entity, (DXFGraphic, Iterable)):

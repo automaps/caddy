@@ -22,11 +22,11 @@ def get_matched_tag_based_on_entity_handle(
     return None
 
 
-def round_tags(tags: Tags, ndigits: int) -> Iterator[DXFTag]:
+def round_tags(tags: Tags, num_digits: int) -> Iterator[DXFTag]:
     for tag in tags:
         if isinstance(tag, DXFVertex):
-            yield DXFVertex(tag.code, (round(d, ndigits) for d in tag.value))
+            yield DXFVertex(tag.code, (round(d, num_digits) for d in tag.value))
         elif isinstance(tag.value, float):
-            yield DXFTag(tag.code, round(tag.value, ndigits))  # type: ignore
+            yield DXFTag(tag.code, round(tag.value, num_digits))  # type: ignore
         else:
             yield tag

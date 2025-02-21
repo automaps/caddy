@@ -2,7 +2,7 @@ PROJECT_NAME = "Caddy"
 PROJECT_AUTHOR = "Christian Heider Lindbjerg <chen(at)mapspeople.com>"
 PROJECT_YEAR = 2024
 PROJECT_ORGANISATION = "MapsPeople"
-PROJECT_VERSION = "0.0.2"
+PROJECT_VERSION = "0.0.4"
 
 __doc__ = f"""
 Migration Base Module

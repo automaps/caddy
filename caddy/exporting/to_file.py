@@ -43,12 +43,15 @@ def export_to(
             gdf = GeoDataFrame({"geometry": g, **extras})
             # gdf.crs = 'EPSG:4326'
             # gdf.to_file(str(out_path), driver=driver, layer=l)
-            gdf.to_file(
-                str(out_path.with_suffix(".sqlite")),
-                driver="SQLite",
-                spatialite=True,
-                layer=l,
-            )
+            if True:
+                gdf.to_file(str(out_path), driver=driver)
+            else:
+                gdf.to_file(
+                    str(out_path.with_suffix(".sqlite")),
+                    driver="SQLite",
+                    spatialite=True,
+                    layer=l,
+                )
     else:
         extras = defaultdict(list)
         for l, ges in dict(dxf_entities).items():

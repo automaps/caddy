@@ -36,7 +36,10 @@ def extract_shaped_dxf_entities(dxf_path):
         for shapely_geometry, dxf_entity in to_shapely(entity, m):
             if shapely_geometry:
                 if isinstance(dxf_entity, DXFEntity):
-                    cleaned = clean_shape(shapely_geometry)
+                    if True:
+                        cleaned = clean_shape(shapely_geometry)
+                    else:
+                        cleaned = shapely_geometry
                     if False:
                         if is_polygonal(cleaned):
                             cleaned = ensure_cw_poly(cleaned)

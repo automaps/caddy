@@ -1,14 +1,16 @@
 import logging
-from typing import Iterable, Optional, Tuple, Union
+from typing import Generator, Iterable, Tuple, Union
 
 import shapely
 from ezdxf.addons import geo
 from ezdxf.disassemble import recursive_decompose
 from ezdxf.entities import (
+    Arc,
     Circle,
     DXFEntity,
     DXFGraphic,
     Dimension,
+    Face3d,
     Insert,
     MText,
     Polyline,
@@ -24,21 +26,35 @@ from caddy.model import BlockInsertion, FailCase
 TRANSFORM = False
 TRY_FIX_CURVES = False
 SMALL_NUMBER = 0.0001
+DEFAULT_STEP_SIZE = 0.1
+DEFAULT_PRECISION = 10
 
 logger = logging.getLogger(__name__)
 
 __all__ = ["to_shapely"]
 
 
+def ijasd(v):
+    if isinstance(v, Arc):
+        return v.flattening(DEFAULT_STEP_SIZE)
+
+    elif isinstance(v, Face3d):
+        return v.wcs_vertices(True)
+
+    return v.points()
+
+
 def to_shapely(
     entity: DXFEntity,
     m: Matrix44 = None,
-    step_size: float = 0.1,
-    precision: float = 10,
-) -> Optional[
+    step_size: float = DEFAULT_STEP_SIZE,
+    precision: float = DEFAULT_PRECISION,
+) -> Generator[
     Tuple[
         shapely.geometry.base.BaseGeometry, Union[DXFEntity, BlockInsertion, FailCase]
-    ]
+    ],
+    None,
+    None,
 ]:
     if isinstance(entity, Insert):
         vec3 = entity.dxf.insert
@@ -61,15 +77,33 @@ def to_shapely(
         for ent in entity.virtual_entities():
             yield from to_shapely(ent, m)
 
-    elif isinstance(entity, Polyline) and not (
-        entity.is_3d_polyline or entity.is_2d_polyline
+    elif (
+        isinstance(entity, Polyline)
+        and not (entity.is_3d_polyline or entity.is_2d_polyline)
+        and entity.is_closed
     ):
         poly = shapely.Polygon((p.x, p.y) for p in entity.points())
 
-        yield clean_shape(poly), entity
+        if True:
+            poly = clean_shape(poly)
+        yield poly, entity
+    elif isinstance(entity, Polyline) and entity.is_poly_face_mesh:
+        a = []
+        for v in entity.virtual_entities():
+            h = []
+            for p in ijasd(v):
+                h.append((p.x, p.y))
+            a.append(shapely.LineString(h))
+        poly = shapely.multilinestrings(a)
+
+        if True:
+            poly = clean_shape(poly)
+
+        yield poly, entity
 
     elif isinstance(entity, ImageBase):
         yield shapely.LineString((v.x, v.y) for v in entity.boundary_path), entity
+
     elif isinstance(entity, Viewport):
         if False:
             for ent in recursive_decompose((entity,)):
@@ -124,8 +158,11 @@ def to_shapely(
                 return
 
             except Exception as e:
-                if False:
+                if True:
                     logger.error(e)
+
+                if False:
+                    raise e
 
         if False:  # FAIL CASES
             if isinstance(entity, (Circle)):

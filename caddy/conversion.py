@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 __all__ = ["to_shapely"]
 
 
-def ijasd(v):
+def resolve_polyline(v):
     if isinstance(v, Arc):
         return v.flattening(DEFAULT_STEP_SIZE)
 
@@ -91,7 +91,7 @@ def to_shapely(
         a = []
         for v in entity.virtual_entities():
             h = []
-            for p in ijasd(v):
+            for p in resolve_polyline(v):
                 h.append((p.x, p.y))
             a.append(shapely.LineString(h))
         poly = shapely.multilinestrings(a)

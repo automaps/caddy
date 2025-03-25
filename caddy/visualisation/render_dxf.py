@@ -7,9 +7,12 @@ from matplotlib import pyplot
 from caddy.exporting import extract_shaped_dxf_entities
 
 
-def dxf_to_svg(dxf_path, out_path: Optional[Path] = None) -> None:
+def dxf_to_svg(dxf_path: Path, out_path: Optional[Path] = None) -> None:
+    if not isinstance(dxf_path, Path):
+        dxf_path = Path(dxf_path)
+
     if out_path is None:
-        out_path = Path(dxf_path).with_suffix(".svg")
+        out_path = dxf_path.with_suffix(".svg")
 
     layers = []
 
@@ -26,9 +29,12 @@ def dxf_to_svg(dxf_path, out_path: Optional[Path] = None) -> None:
     # pyplot.show()
 
 
-def dxf_to_pyplot(dxf_path, out_path: Optional[Path] = None) -> None:
+def dxf_to_pyplot(dxf_path: Path, out_path: Optional[Path] = None) -> None:
+    if not isinstance(dxf_path, Path):
+        dxf_path = Path(dxf_path)
+
     if out_path is None:
-        out_path = Path(dxf_path).with_suffix(".pdf")
+        out_path = dxf_path.with_suffix(".pdf")
 
     layers = []
 

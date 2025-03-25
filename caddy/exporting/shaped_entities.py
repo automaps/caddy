@@ -1,5 +1,7 @@
 import logging
 from collections import defaultdict
+from pathlib import Path
+from typing import List
 
 import ezdxf
 from ezdxf.entities import DXFEntity
@@ -14,7 +16,10 @@ logger = logging.getLogger(__name__)
 __all__ = ["extract_shaped_dxf_entities"]
 
 
-def extract_shaped_dxf_entities(dxf_path):
+def extract_shaped_dxf_entities(dxf_path: Path) -> List[DXFEntity]:
+    if not isinstance(dxf_path, Path):
+        dxf_path = Path(dxf_path)
+
     source_doc = ezdxf.readfile(str(dxf_path))
 
     msp = source_doc.modelspace()

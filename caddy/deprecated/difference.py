@@ -9,7 +9,6 @@ from ezdxf.lldxf.extendedtags import ExtendedTags
 from ezdxf.lldxf.tagger import tag_compiler
 from ezdxf.lldxf.tags import Tags
 from ezdxf.tools.rawloader import raw_structure_loader
-from jord.shapely_utilities import dilate
 
 from caddy.conversion import to_shapely
 from caddy.difference import tag_two_way_difference, tags_difference
@@ -19,6 +18,7 @@ from caddy.ezdxf_utilities import (
     get_matched_tag_based_on_entity_handle,
 )
 from caddy.shapely_utilities import strip_z_coord
+from jord.shapely_utilities import dilate
 
 logger = logging.getLogger(__name__)
 

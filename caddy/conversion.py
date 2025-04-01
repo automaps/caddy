@@ -19,9 +19,9 @@ from ezdxf.entities import (
 )
 from ezdxf.entities.image import ImageBase
 from ezdxf.math import Matrix44
-from jord.shapely_utilities import clean_shape
 
 from caddy.model import BlockInsertion, FailCase
+from jord.shapely_utilities import clean_shape
 
 TRANSFORM = False
 TRY_FIX_CURVES = False

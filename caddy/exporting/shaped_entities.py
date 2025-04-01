@@ -6,10 +6,10 @@ from typing import List
 import ezdxf
 from ezdxf.entities import DXFEntity
 from ezdxf.math import Matrix44
-from jord.shapely_utilities import clean_shape, ensure_cw_poly, is_polygonal
 
 from caddy.conversion import to_shapely
 from caddy.model import BlockInsertion, FailCase
+from jord.shapely_utilities import clean_shape, ensure_cw_poly, is_polygonal
 
 logger = logging.getLogger(__name__)
 

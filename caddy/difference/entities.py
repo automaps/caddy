@@ -4,11 +4,11 @@ from typing import Dict
 
 import ezdxf
 import shapely
-from jord.shapely_utilities import dilate
 
 from caddy.conversion import to_shapely
 from caddy.ezdxf_utilities import DxfSection
 from caddy.shapely_utilities import strip_z_coord
+from jord.shapely_utilities import dilate
 from .documents import document_differences
 
 __all__ = ["get_entity_differences"]

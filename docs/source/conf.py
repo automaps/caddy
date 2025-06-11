@@ -5,6 +5,7 @@ from pathlib import Path
 from docutils import nodes
 from sphinx import addnodes
 from sphinx.util.docfields import TypedField
+
 from warg import cprint, ensure_in_sys_path
 
 PACKAGE_ROOT = Path(__file__).parent.parent.parent

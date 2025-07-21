@@ -1,8 +1,7 @@
+import ezdxf
 from collections import defaultdict
 from pathlib import Path
 from typing import Dict
-
-import ezdxf
 
 from caddy.ezdxf_utilities import DxfSection
 from .documents import document_differences

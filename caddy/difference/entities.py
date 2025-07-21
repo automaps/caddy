@@ -1,9 +1,8 @@
+import ezdxf
+import shapely
 from collections import defaultdict
 from pathlib import Path
 from typing import Dict
-
-import ezdxf
-import shapely
 
 from caddy.conversion import to_shapely
 from caddy.ezdxf_utilities import DxfSection

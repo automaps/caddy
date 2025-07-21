@@ -1,6 +1,4 @@
 import logging
-from typing import Generator, Iterable, Tuple, Union
-
 import shapely
 from ezdxf.addons import geo
 from ezdxf.disassemble import recursive_decompose
@@ -19,6 +17,7 @@ from ezdxf.entities import (
 )
 from ezdxf.entities.image import ImageBase
 from ezdxf.math import Matrix44
+from typing import Generator, Iterable, Tuple, Union
 
 from caddy.model import BlockInsertion, FailCase
 from jord.shapely_utilities import clean_shape

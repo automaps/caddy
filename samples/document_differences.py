@@ -1,6 +1,5 @@
-from pathlib import Path
-
 import pandas
+from pathlib import Path
 
 from caddy.difference import get_entity_differences
 from caddy.difference.blocks import get_block_differences

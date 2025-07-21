@@ -1,11 +1,10 @@
+import ezdxf
 import logging
 from collections import defaultdict
-from pathlib import Path
-from typing import Dict, List
-
-import ezdxf
 from ezdxf.entities import DXFEntity, Insert, MText, Text
 from ezdxf.math import Matrix44
+from pathlib import Path
+from typing import Dict, List
 
 from caddy.conversion import to_shapely
 from caddy.model import BlockInsertion, FailCase

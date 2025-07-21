@@ -1,8 +1,7 @@
-from pathlib import Path
-from typing import Optional
-
 import geopandas
 from matplotlib import pyplot
+from pathlib import Path
+from typing import Optional
 
 from caddy.exporting import extract_shaped_dxf_entities
 

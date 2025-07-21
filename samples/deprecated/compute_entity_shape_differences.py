@@ -1,7 +1,6 @@
-from pathlib import Path
-
 import ezdxf
 import shapely
+from pathlib import Path
 
 from caddy.difference import document_differences
 from caddy.exporting import to_shapely

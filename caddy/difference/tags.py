@@ -1,8 +1,7 @@
 from difflib import SequenceMatcher
-from typing import Dict, Iterable, Iterator, Optional
-
 from ezdxf.lldxf.tags import Tags
 from ezdxf.lldxf.types import DXFTag
+from typing import Dict, Iterable, Iterator, Optional
 
 __all__ = ["tags_difference", "tag_two_way_difference"]
 

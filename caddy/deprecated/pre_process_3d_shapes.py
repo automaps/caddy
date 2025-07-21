@@ -1,8 +1,7 @@
-from pathlib import Path
-
 import ezdxf
 from ezdxf.acis import api as acis
 from ezdxf.entities import Body
+from pathlib import Path
 
 
 def method_name(e, msp_out):

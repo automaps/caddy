@@ -1,8 +1,7 @@
-from typing import Iterable, Iterator, Optional
-
 from ezdxf.lldxf.tagger import tag_compiler
 from ezdxf.lldxf.tags import Tags
 from ezdxf.lldxf.types import DXFTag, DXFVertex
+from typing import Iterable, Iterator, Optional
 
 from .handles import get_handle
 

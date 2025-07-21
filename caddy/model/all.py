@@ -1,6 +1,5 @@
-from dataclasses import dataclass
-
 import shapely
+from dataclasses import dataclass
 from ezdxf.entities import DXFEntity, Insert
 from ezdxf.layouts import BlockLayout
 

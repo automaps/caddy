@@ -1,8 +1,7 @@
 import logging
+from ezdxf.tools.rawloader import raw_structure_loader
 from pathlib import Path
 from typing import Dict, Iterable
-
-from ezdxf.tools.rawloader import raw_structure_loader
 
 from caddy.ezdxf_utilities import DxfSection
 from .sections import section_two_way_difference

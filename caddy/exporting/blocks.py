@@ -1,15 +1,14 @@
+import ezdxf
 import logging
+import shapely.geometry
 from collections import defaultdict
+from ezdxf.entities import DXFEntity
 from pathlib import Path
 from typing import Collection, Dict, List, Tuple
 
-import ezdxf
-import shapely.geometry
-from ezdxf.entities import DXFEntity
-from jord.shapely_utilities import clean_shape
-
 from caddy.conversion import to_shapely
 from caddy.model import BlockInsertion, BlockPointInsert
+from jord.shapely_utilities import clean_shape
 
 logger = logging.getLogger(__name__)
 

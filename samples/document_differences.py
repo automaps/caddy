@@ -1,10 +1,9 @@
-from pathlib import Path
-
 import pandas
-from warg import ensure_existence
+from pathlib import Path
 
 from caddy.difference import get_entity_differences
 from caddy.difference.blocks import get_block_differences
+from warg import ensure_existence
 
 
 def compute_entity_difference():

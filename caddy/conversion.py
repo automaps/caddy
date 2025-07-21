@@ -1,6 +1,4 @@
 import logging
-from typing import Generator, Iterable, Tuple, Union
-
 import shapely
 from ezdxf.addons import geo
 from ezdxf.disassemble import recursive_decompose
@@ -19,9 +17,10 @@ from ezdxf.entities import (
 )
 from ezdxf.entities.image import ImageBase
 from ezdxf.math import Matrix44
-from jord.shapely_utilities import clean_shape
+from typing import Generator, Iterable, Tuple, Union
 
 from caddy.model import BlockInsertion, FailCase
+from jord.shapely_utilities import clean_shape
 
 TRANSFORM = False
 TRY_FIX_CURVES = False
@@ -34,7 +33,7 @@ logger = logging.getLogger(__name__)
 __all__ = ["to_shapely"]
 
 
-def ijasd(v):
+def resolve_polyline(v):
     if isinstance(v, Arc):
         return v.flattening(DEFAULT_STEP_SIZE)
 
@@ -91,7 +90,7 @@ def to_shapely(
         a = []
         for v in entity.virtual_entities():
             h = []
-            for p in ijasd(v):
+            for p in resolve_polyline(v):
                 h.append((p.x, p.y))
             a.append(shapely.LineString(h))
         poly = shapely.multilinestrings(a)

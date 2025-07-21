@@ -1,16 +1,15 @@
-from collections import defaultdict
-from pathlib import Path
-
 import shapely
+from collections import defaultdict
 from draugr.progress_bars import progress_bar
 from geopandas import GeoDataFrame
-from jord.shapely_utilities import dilate
 from matplotlib import pyplot
+from pathlib import Path
 from shapely.affinity import affine_transform
 
 from caddy.exporting import get_block_geoms
 from caddy.ezdxf_utilities import get_transformation
 from caddy.visualisation import plot_shapely_geometry, random_rgba
+from jord.shapely_utilities import dilate
 
 if __name__ == "__main__":
 

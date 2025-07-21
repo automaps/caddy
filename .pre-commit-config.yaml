@@ -12,15 +12,15 @@ repos:
   #        files: \.(py.j2|py)$
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.19.0
+    rev: v3.20.0
     hooks:
       - id: pyupgrade
         args:
           - --py38-plus
           - --keep-runtime-typing
 
-  - repo: https://github.com/ambv/black
-    rev: 24.10.0
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
     hooks:
       - id: black
         exclude: resources.py
@@ -33,12 +33,12 @@ repos:
         types: [yaml]
 
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: v0.22
+    rev: v0.24.1
     hooks:
       - id: validate-pyproject
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.13.0
+    rev: v1.17.0
     hooks:
       - id: mypy
         verbose: true
@@ -47,7 +47,7 @@ repos:
         #args: [ --strict ]
 
   - repo: https://github.com/pycqa/flake8
-    rev: 7.1.1 # pick a git hash / tag to point to
+    rev: 7.3.0 # pick a git hash / tag to point to
     hooks:
       - id: flake8 # stop the build if there are Python syntax errors or undefined names
         additional_dependencies: [flake8-docstrings]

@@ -1,13 +1,14 @@
-import ezdxf
 import logging
-import shapely
 from collections import defaultdict
+from pathlib import Path
+from typing import Dict, List, Union
+
+import ezdxf
+import shapely
 from ezdxf.lldxf.extendedtags import ExtendedTags
 from ezdxf.lldxf.tagger import tag_compiler
 from ezdxf.lldxf.tags import Tags
 from ezdxf.tools.rawloader import raw_structure_loader
-from pathlib import Path
-from typing import Dict, List, Union
 
 from caddy.conversion import to_shapely
 from caddy.difference import tag_two_way_difference, tags_difference

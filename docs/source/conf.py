@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-from docutils import nodes
 from pathlib import Path
+
+from docutils import nodes
 from sphinx import addnodes
 from sphinx.util.docfields import TypedField
 

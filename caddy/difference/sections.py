@@ -1,8 +1,9 @@
 import logging
+from typing import Dict, List, Union
+
 from ezdxf.lldxf.extendedtags import ExtendedTags
 from ezdxf.lldxf.tagger import tag_compiler
 from ezdxf.lldxf.tags import Tags
-from typing import Dict, List, Union
 
 from caddy.ezdxf_utilities import (
     OpCode,

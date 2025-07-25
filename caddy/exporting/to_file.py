@@ -1,8 +1,9 @@
 from collections import defaultdict
-from ezdxf.entities import Insert, MText, Text
-from geopandas import GeoDataFrame
 from pathlib import Path
 from typing import Optional
+
+from ezdxf.entities import Insert, MText, Text
+from geopandas import GeoDataFrame
 
 from caddy.exporting import extract_shaped_dxf_entities, logger
 

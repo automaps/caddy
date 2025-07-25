@@ -1,9 +1,10 @@
-import shapely
 from collections import defaultdict
+from pathlib import Path
+
+import shapely
 from draugr.progress_bars import progress_bar
 from geopandas import GeoDataFrame
 from matplotlib import pyplot
-from pathlib import Path
 from shapely.affinity import affine_transform
 
 from caddy.exporting import get_block_geoms

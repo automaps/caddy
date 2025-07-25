@@ -1,5 +1,6 @@
-from numpy import cos, radians, sin
 from typing import List
+
+from numpy import cos, radians, sin
 
 from caddy.exporting import BlockPointInsert
 

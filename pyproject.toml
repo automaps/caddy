@@ -9,10 +9,10 @@ packages = [{ include = "caddy" }]
 
 [tool.poetry.dependencies]
 pytest = "*"
-python = "^3.9"
+python = ">=3.9"
 warg = ">=1.4.1"
 draugr = ">=1.2.0"
-numpy = "^1.24.0"
+numpy = ">=1.24.0"
 jord = ">=0.10.1"
 shapely = ">=2.0.3"
 ezdxf = ">=1.2.0"

@@ -123,7 +123,7 @@ def to_shapely(
                 # , vec3.z
             ), entity
         else:
-            (min_x, min_y, max_x, max_y) = entity.get_modelspace_limits()
+            min_x, min_y, max_x, max_y = entity.get_modelspace_limits()
             # (-71.605931530016, -0.7866669825158965, 491.60594764232457, 297.7866552316861)
 
             yield shapely.Polygon(

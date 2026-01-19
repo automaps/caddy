@@ -12,15 +12,15 @@ repos:
   #        files: \.(py.j2|py)$
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.20.0
+    rev: v3.21.2
     hooks:
       - id: pyupgrade
         args:
           - --py38-plus
           - --keep-runtime-typing
 
-  - repo: https://github.com/psf/black
-    rev: 25.1.0
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 26.1.0
     hooks:
       - id: black
         exclude: resources.py
@@ -38,7 +38,7 @@ repos:
       - id: validate-pyproject
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.17.1
+    rev: v1.19.1
     hooks:
       - id: mypy
         verbose: true
@@ -68,7 +68,7 @@ repos:
           - --statistics
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0 # Use the ref you want to point at
+    rev: v6.0.0 # Use the ref you want to point at
     hooks:
       - id: check-added-large-files
         name: check for added large files

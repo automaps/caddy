@@ -11,7 +11,7 @@ from caddy.conversion import to_shapely
 from caddy.model import BlockInsertion, FailCase
 from jord.shapely_utilities import clean_shape, ensure_cw_poly, is_polygonal
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 __all__ = ["extract_shaped_dxf_entities"]
 
@@ -34,7 +34,7 @@ def extract_shaped_dxf_entities(dxf_path: Path) -> List[DXFEntity]:
         # Identity matrix for DXF files without geo reference data:
         m = Matrix44()
 
-    logger.warning(f"Converting {dxf_path}")
+    _logger.warning(f"Converting {dxf_path}")
     shaped_dxf_entities = defaultdict(list)
 
     for entity in msp.query("*"):
@@ -63,8 +63,8 @@ def extract_shaped_dxf_entities(dxf_path: Path) -> List[DXFEntity]:
                     ].append((shapely_geometry, dxf_entity.entity))
 
                 else:
-                    logger.error(f"Unexpected entity type {type(dxf_entity)}")
+                    _logger.error(f"Unexpected entity type {type(dxf_entity)}")
             else:
-                logger.error(f"{entity} has no geometry ")
+                _logger.error(f"{entity} has no geometry ")
 
     return shaped_dxf_entities

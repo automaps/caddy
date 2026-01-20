@@ -12,7 +12,7 @@ from caddy.ezdxf_utilities import (
 )
 from .tags import tag_two_way_difference, tags_difference
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 __all__ = ["section_two_way_difference"]
 
@@ -35,7 +35,7 @@ def section_two_way_difference(
         )
 
         if new_entity_tags is None:
-            logger.info(f"entity handle #{old_entity_handle} not found in new file")
+            _logger.info(f"entity handle #{old_entity_handle} not found in new file")
             entity_level_result["deleted"].append(old_entity_handle)
         else:
             compiled_original_tags = Tags(tag_compiler(iter(original_tags)))
@@ -69,7 +69,7 @@ def section_two_way_difference(
         )
 
         if old_entity_tags is None:
-            logger.info(
+            _logger.info(
                 f"entity handle #{new_entity_handle} not found in the original file"
             )
             entity_level_result["created"].append(new_entity_handle)

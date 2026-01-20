@@ -29,7 +29,7 @@ SMALL_NUMBER = 0.0001
 DEFAULT_STEP_SIZE = 0.1
 DEFAULT_PRECISION = 10
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 __all__ = ["to_shapely"]
 
@@ -159,7 +159,7 @@ def to_shapely(
 
             except Exception as e:
                 if True:
-                    logger.error(e)
+                    _logger.error(e)
 
                 if False:
                     raise e
@@ -176,7 +176,7 @@ def to_shapely(
 
                 if hasattr(entity.dxf, "radius") and entity.dxf.radius > 0:
                     if not TRY_FIX_CURVES:
-                        logger.warning(f"skipping {entity}")
+                        _logger.warning(f"skipping {entity}")
                         return
 
                     sagitta = step_size
@@ -188,7 +188,7 @@ def to_shapely(
                         )
                         case = "radius"
                     except Exception as e:
-                        logger.error(e)
+                        _logger.error(e)
                         return
 
                 elif hasattr(entity, "flattening"):
@@ -204,6 +204,6 @@ def to_shapely(
                 return
 
         if False:
-            logger.error(f"Skipping conversion of {entity=}")
+            _logger.error(f"Skipping conversion of {entity=}")
 
     return

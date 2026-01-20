@@ -20,7 +20,7 @@ from caddy.ezdxf_utilities import (
 from caddy.shapely_utilities import strip_z_coord
 from jord.shapely_utilities import dilate
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 __all__ = [
     "get_handle",
@@ -48,7 +48,7 @@ def section_two_way_difference(
         )
 
         if new_entity_tags is None:
-            logger.info(f"entity handle #{entity_handle} not found in new file")
+            _logger.info(f"entity handle #{entity_handle} not found in new file")
             entity_level_result["deleted"] = entity_handle
             continue
 
@@ -77,7 +77,7 @@ def section_two_way_difference(
         )
 
         if old_entity_tags is None:
-            logger.info(
+            _logger.info(
                 f"entity handle #{entity_handle} not found in the original file"
             )
             entity_level_result["created"] = entity_handle

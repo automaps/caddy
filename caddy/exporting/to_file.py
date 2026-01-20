@@ -5,7 +5,7 @@ from typing import Optional
 from ezdxf.entities import Insert, MText, Text
 from geopandas import GeoDataFrame
 
-from caddy.exporting import extract_shaped_dxf_entities, logger
+from caddy.exporting import extract_shaped_dxf_entities, _logger
 
 LAYER_WISE = False
 
@@ -18,7 +18,7 @@ def export_to(
 
     dxf_entities = extract_shaped_dxf_entities(dxf_path)
 
-    logger.warning(f"Exporting {dxf_path} -> {out_path}")
+    _logger.warning(f"Exporting {dxf_path} -> {out_path}")
 
     if LAYER_WISE:
         for l, ges in dict(dxf_entities).items():
@@ -87,4 +87,4 @@ def export_to(
                 spatialite=True,
             )
 
-    logger.warning(f"Wrote {out_path}")
+    _logger.warning(f"Wrote {out_path}")

@@ -11,7 +11,7 @@ from caddy.conversion import to_shapely
 from caddy.model import BlockInsertion, BlockPointInsert
 from jord.shapely_utilities import clean_shape
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 def get_block_geoms(
@@ -34,9 +34,9 @@ def get_block_geoms(
                     if isinstance(e, DXFEntity):
                         block_geoms[block.name].append(clean_shape(g))
                     elif isinstance(e, BlockInsertion):
-                        logger.info(f"Nested insert of {e.block}")
+                        _logger.info(f"Nested insert of {e.block}")
                 else:
-                    logger.error(f"{entity} has no geometry ")
+                    _logger.error(f"{entity} has no geometry ")
 
     msp = source_doc.modelspace()
 

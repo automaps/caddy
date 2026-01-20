@@ -7,7 +7,7 @@ from ezdxf.tools.rawloader import raw_structure_loader
 from caddy.ezdxf_utilities import DxfSection
 from .sections import section_two_way_difference
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 __all__ = ["document_differences"]
 
@@ -33,6 +33,6 @@ def document_differences(
                     ),
                 )
             else:
-                logger.warning(f"{section=} was not found in {right_document_path=}")
+                _logger.warning(f"{section=} was not found in {right_document_path=}")
         else:
-            logger.warning(f"{section=} was not found in {left_document_path=}")
+            _logger.warning(f"{section=} was not found in {left_document_path=}")

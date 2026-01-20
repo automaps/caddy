@@ -11,7 +11,7 @@ from caddy.conversion import to_shapely
 from caddy.model import BlockInsertion, FailCase
 from jord.shapely_utilities import clean_shape
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 __all__ = ["export_to_shapely_dict"]
 
@@ -32,7 +32,7 @@ def export_to_shapely_dict(dxf_path: Path) -> List[Dict]:
         # Identity matrix for DXF files without geo reference data:
         m = Matrix44()
 
-    logger.warning(f"Converting {dxf_path}")
+    _logger.warning(f"Converting {dxf_path}")
 
     geoms = defaultdict(list)
     for entity in msp.query("*"):
@@ -49,9 +49,9 @@ def export_to_shapely_dict(dxf_path: Path) -> List[Dict]:
                     geoms[f"FAIL_CASE_{e.entity.dxf.layer}"].append((g, e.entity))
 
                 else:
-                    logger.error(f"Unexpected entity type {type(e)}")
+                    _logger.error(f"Unexpected entity type {type(e)}")
             else:
-                logger.error(f"{entity} has no geometry ")
+                _logger.error(f"{entity} has no geometry ")
 
     extras = defaultdict(list)
     for l, ges in dict(geoms).items():

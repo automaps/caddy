@@ -12,6 +12,17 @@ from caddy.ezdxf_utilities import round_tags, OpCode, Operation, convert_opcodes
 def tags_difference(
     a: Tags, b: Tags, ndigits: Optional[int] = None
 ) -> Iterator[Operation]:
+    """
+
+    :param a:
+    :type a:
+    :param b:
+    :type b:
+    :param ndigits:
+    :type ndigits:
+    :return:
+    :rtype:
+    """
     if ndigits is not None:
         a = Tags(round_tags(a, ndigits))
         b = Tags(round_tags(b, ndigits))
@@ -22,6 +33,17 @@ def tags_difference(
 
 
 def tag_two_way_difference(a: Tags, b: Tags, operations: Iterable[Operation]) -> Dict:
+    """
+
+    :param a:
+    :type a:
+    :param b:
+    :type b:
+    :param operations:
+    :type operations:
+    :return:
+    :rtype:
+    """
     t1: DXFTag
     t2: DXFTag
 

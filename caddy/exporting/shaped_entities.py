@@ -17,6 +17,13 @@ __all__ = ["extract_shaped_dxf_entities"]
 
 
 def extract_shaped_dxf_entities(dxf_path: Path) -> List[DXFEntity]:
+    """
+
+    :param dxf_path:
+    :type dxf_path:
+    :return:
+    :rtype:
+    """
     if not isinstance(dxf_path, Path):
         dxf_path = Path(dxf_path)
 

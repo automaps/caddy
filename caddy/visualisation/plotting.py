@@ -7,6 +7,15 @@ from warg import QuadNumber
 def plot_shapely_geometry(
     geom: shapely.geometry.base.BaseGeometry, color: QuadNumber
 ) -> None:
+    """
+
+    :param geom:
+    :type geom:
+    :param color:
+    :type color:
+    :return:
+    :rtype:
+    """
     if isinstance(geom, shapely.GeometryCollection):
         for g in geom.geoms:
             plot_shapely_geometry(g, color)

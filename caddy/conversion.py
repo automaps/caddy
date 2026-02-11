@@ -35,6 +35,13 @@ __all__ = ["to_shapely"]
 
 
 def resolve_polyline(v):
+    """
+
+    :param v:
+    :type v:
+    :return:
+    :rtype:
+    """
     if isinstance(v, Arc):
         return v.flattening(DEFAULT_STEP_SIZE)
 
@@ -56,6 +63,19 @@ def to_shapely(
     None,
     None,
 ]:
+    """
+
+    :param entity:
+    :type entity:
+    :param m:
+    :type m:
+    :param step_size:
+    :type step_size:
+    :param precision:
+    :type precision:
+    :return:
+    :rtype:
+    """
     if isinstance(entity, Insert):
         vec3 = entity.dxf.insert
 

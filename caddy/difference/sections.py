@@ -22,6 +22,17 @@ def section_two_way_difference(
     new_section: List[Union[Tags, ExtendedTags]],
     precision: int = 6,
 ) -> Dict:
+    """
+
+    :param original_section:
+    :type original_section:
+    :param new_section:
+    :type new_section:
+    :param precision:
+    :type precision:
+    :return:
+    :rtype:
+    """
     entity_level_result = {"created": [], "modified": [], "deleted": []}
 
     for original_tags in original_section:

@@ -23,6 +23,13 @@ def get_block_geoms(
         List[Tuple[shapely.Point, float, float, float, float]],
     ],
 ]:
+    """
+
+    :param dxf_path:
+    :type dxf_path:
+    :return:
+    :rtype:
+    """
     source_doc = ezdxf.readfile(str(dxf_path))
 
     block_geoms = defaultdict(list)

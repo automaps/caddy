@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Dict, Iterable
+from typing import Any, Dict, Generator, Iterable
 
 from ezdxf.tools.rawloader import raw_structure_loader
 
@@ -18,7 +18,20 @@ def document_differences(
     *,
     sections: Iterable = DxfSection,
     **kwargs,
-) -> tuple[DxfSection, Dict]:
+) -> Generator[tuple[Any, dict], Any, None]:
+    """
+
+    :param left_document_path:
+    :type left_document_path:
+    :param right_document_path:
+    :type right_document_path:
+    :param sections:
+    :type sections:
+    :param kwargs:
+    :type kwargs:
+    :return:
+    :rtype:
+    """
     original_document = raw_structure_loader(str(left_document_path))
     new_document = raw_structure_loader(str(right_document_path))
     for section in sections:

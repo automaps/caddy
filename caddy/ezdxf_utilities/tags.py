@@ -12,6 +12,15 @@ __all__ = ["get_matched_tag_based_on_entity_handle", "round_tags"]
 def get_matched_tag_based_on_entity_handle(
     entities: Iterable[Tags], query_handle: str
 ) -> Optional[Tags]:
+    """
+
+    :param entities:
+    :type entities:
+    :param query_handle:
+    :type query_handle:
+    :return:
+    :rtype:
+    """
     for entity in entities:
         result_handle = get_handle(entity)
         if result_handle is not None:
@@ -23,6 +32,15 @@ def get_matched_tag_based_on_entity_handle(
 
 
 def round_tags(tags: Tags, num_digits: int) -> Iterator[DXFTag]:
+    """
+
+    :param tags:
+    :type tags:
+    :param num_digits:
+    :type num_digits:
+    :return:
+    :rtype:
+    """
     for tag in tags:
         if isinstance(tag, DXFVertex):
             yield DXFVertex(tag.code, (round(d, num_digits) for d in tag.value))

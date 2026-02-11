@@ -17,6 +17,17 @@ __all__ = ["get_entity_differences"]
 def get_entity_differences(
     left_file_path: Path, right_file_path: Path, diff_buffer_dilation_size: float = 10
 ) -> Dict:
+    """
+
+    :param left_file_path:
+    :type left_file_path:
+    :param right_file_path:
+    :type right_file_path:
+    :param diff_buffer_dilation_size:
+    :type diff_buffer_dilation_size:
+    :return:
+    :rtype:
+    """
     out = defaultdict(dict)
 
     source_dxf = ezdxf.readfile(left_file_path)

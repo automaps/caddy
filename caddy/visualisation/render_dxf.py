@@ -8,6 +8,15 @@ from caddy.exporting import extract_shaped_dxf_entities
 
 
 def dxf_to_svg(dxf_path: Path, out_path: Optional[Path] = None) -> None:
+    """
+
+    :param dxf_path:
+    :type dxf_path:
+    :param out_path:
+    :type out_path:
+    :return:
+    :rtype:
+    """
     if not isinstance(dxf_path, Path):
         dxf_path = Path(dxf_path)
 
@@ -30,6 +39,15 @@ def dxf_to_svg(dxf_path: Path, out_path: Optional[Path] = None) -> None:
 
 
 def dxf_to_pyplot(dxf_path: Path, out_path: Optional[Path] = None) -> None:
+    """
+
+    :param dxf_path:
+    :type dxf_path:
+    :param out_path:
+    :type out_path:
+    :return:
+    :rtype:
+    """
     if not isinstance(dxf_path, Path):
         dxf_path = Path(dxf_path)
 

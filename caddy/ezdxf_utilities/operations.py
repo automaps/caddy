@@ -22,6 +22,13 @@ class Operation(NamedTuple):
 def convert_opcodes(
     opcodes: Iterable[Tuple[str, int, int, int, int]],
 ) -> Iterator[Operation]:
+    """
+
+    :param opcodes:
+    :type opcodes:
+    :return:
+    :rtype:
+    """
     for tag, i1, i2, j1, j2 in opcodes:
         yield Operation(CONVERT[tag], i1, i2, j1, j2)
 

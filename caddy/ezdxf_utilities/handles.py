@@ -4,6 +4,13 @@ __all__ = ["get_handle"]
 
 
 def get_handle(tags: Tags) -> str:
+    """
+
+    :param tags:
+    :type tags:
+    :return:
+    :rtype:
+    """
     try:
         return tags.get_handle()
     except ValueError:

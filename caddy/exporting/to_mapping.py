@@ -17,6 +17,13 @@ __all__ = ["export_to_shapely_dict"]
 
 
 def export_to_shapely_dict(dxf_path: Path) -> List[Dict]:
+    """
+
+    :param dxf_path:
+    :type dxf_path:
+    :return:
+    :rtype:
+    """
     source_doc = ezdxf.readfile(str(dxf_path))
 
     msp = source_doc.modelspace()

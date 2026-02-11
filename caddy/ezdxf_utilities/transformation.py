@@ -8,6 +8,13 @@ __all__ = ["get_transformation"]
 
 
 def get_transformation(insertion_point: BlockPointInsert) -> List[float]:
+    """
+
+    :param insertion_point:
+    :type insertion_point:
+    :return:
+    :rtype:
+    """
     if insertion_point.matrix44:
         m = insertion_point.matrix44.get_2d_transformation()  # row wise
         return [m[0], m[3], m[1], m[4], m[6], m[7]]

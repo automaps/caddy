@@ -16,6 +16,17 @@ LAYER_WISE = False
 def export_to(
     dxf_path: Path, out_path: Optional[Path] = None, driver: str = "GPKG"
 ) -> None:
+    """
+
+    :param dxf_path:
+    :type dxf_path:
+    :param out_path:
+    :type out_path:
+    :param driver:
+    :type driver:
+    :return:
+    :rtype:
+    """
     if out_path is None:
         out_path = Path(dxf_path).with_suffix(".gpkg")
 

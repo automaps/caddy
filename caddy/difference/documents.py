@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Any, Dict, Generator, Iterable
+from typing import Any, Generator, Iterable
 
 from ezdxf.tools.rawloader import raw_structure_loader
 

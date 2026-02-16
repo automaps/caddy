@@ -1,16 +1,6 @@
-fail_fast: true
+fail_fast: false
 #exclude: '^exclude'
 repos:
-  #  - repo: local
-  #    hooks:
-  #      - id: no_implicit_optional
-  #        name: no_implicit_optional
-  #        entry: pipx run no_implicit_optional
-  #        language: system
-  #        pass_filenames: true
-  #        types: [file, python]
-  #        files: \.(py.j2|py)$
-
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.21.2
     hooks:
@@ -228,57 +218,3 @@ repos:
         language: python
         types: [text]
         stages: [pre-commit, pre-push, manual]
-
-  #  - repo: local
-  #    hooks:
-  #      - id: sphinx-check
-  #        name: sphinx-check
-  #        entry: docs/make.sh
-  #        language: script
-  #        types: [ python ]
-  #        pass_filenames: false
-
-  #  - repo: local
-  #    hooks:
-  #      - id: pytest-check
-  #        name: pytest-check
-  #        entry: pytest migration --ignore-glob=*exclude*
-  #        language: system
-  #        pass_filenames: false
-  #        always_run: true
-
-  #  - repo: https://github.com/jshwi/docsig # BUGGY!
-  #    rev: v0.30.0
-  #    hooks:
-  #      - id: docsig
-  #        args:
-  #          - "--check-class"
-  #          - "--check-dunders"
-  #          - "--check-overridden"
-  #          - "--check-protected"
-  #          - "--summary"
-
-  #- repo: https://github.com/pycqa/pydocstyle # SLOW!
-  #  rev: 6.3.0  # pick a git hash / tag to point to
-  #  hooks:
-  #    - id: pydocstyle
-
-  #  - repo: https://github.com/jsh9/pydoclint
-  #    rev: 0.3.8
-  #    hooks:
-  #      - id: pydoclint
-  #        args:
-  #          [
-  #            --style=sphinx,
-  #            --check-return-types=False,
-  #            --arg-type-hints-in-docstring=False,
-  #          ]
-
-  #- repo: local
-  #  hooks:
-  #    - id: compile-qt-resources
-  #      name: compile-qt-resources
-  #      entry: rcc -g python -o mi_companion/resources.py resources.qrc
-  #      language: system
-  #      pass_filenames: false
-  #      always_run: true

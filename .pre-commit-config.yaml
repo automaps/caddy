@@ -10,7 +10,7 @@ repos:
           - --keep-runtime-typing
 
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 26.1.0
+    rev: 26.5.1
     hooks:
       - id: black
         exclude: resources.py
@@ -23,12 +23,12 @@ repos:
         types: [yaml]
 
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: v0.25
+    rev: '0.26'
     hooks:
       - id: validate-pyproject
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.19.1
+    rev: v2.3.1
     hooks:
       - id: mypy
         verbose: true
